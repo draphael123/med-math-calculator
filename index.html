@@ -3,205 +3,400 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fountain Vitality — Med Math Reference</title>
+<title>Med Math — Fountain Vitality</title>
 <style>
   :root {
     --teal: #0d9488;
     --teal-light: #ccfbf1;
     --teal-dark: #0f766e;
+    --teal-xdark: #134e4a;
     --amber: #f59e0b;
     --amber-light: #fef3c7;
     --red: #ef4444;
     --red-light: #fee2e2;
     --blue: #3b82f6;
     --blue-light: #dbeafe;
+    --green: #10b981;
+    --green-light: #d1fae5;
     --gray: #6b7280;
     --gray-light: #f3f4f6;
+    --gray-mid: #e5e7eb;
     --border: #e5e7eb;
     --text: #111827;
     --text-muted: #6b7280;
+    --sidebar-w: 220px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: var(--text); font-size: 14px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: var(--text); font-size: 14px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
   /* Header */
-  header { background: var(--teal); color: white; padding: 16px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-  header h1 { font-size: 18px; font-weight: 700; }
-  header span { font-size: 12px; opacity: 0.8; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; }
+  header {
+    background: var(--teal);
+    color: white;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-icon { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .header-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .header-sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
+  .header-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
 
-  /* Nav */
-  nav { background: white; border-bottom: 2px solid var(--border); display: flex; overflow-x: auto; padding: 0 16px; }
-  nav button { padding: 12px 16px; border: none; background: none; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--gray); border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; }
-  nav button:hover { color: var(--teal); }
-  nav button.active { color: var(--teal); border-bottom-color: var(--teal); }
+  /* App Shell */
+  .app-shell { display: flex; flex: 1; overflow: hidden; }
+
+  /* Sidebar */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: white;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 12px 0 24px;
+  }
+  .sidebar-section-label { padding: 14px 16px 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    font-size: 13px; font-weight: 500; color: var(--gray);
+    cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+    border-right: 3px solid transparent;
+    transition: all 0.12s; line-height: 1.3;
+  }
+  .sidebar-item:hover { background: var(--gray-light); color: var(--text); }
+  .sidebar-item.active { background: #f0fdf9; color: var(--teal); border-right-color: var(--teal); font-weight: 600; }
+  .sidebar-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: var(--gray-light); }
+  .sidebar-item.active .sidebar-icon { background: rgba(13,148,136,0.12); }
 
   /* Main */
-  main { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+  main { flex: 1; overflow-y: auto; padding: 24px; }
   .section { display: none; }
-  .section.active { display: block; }
+  .section.active { display: block; max-width: 860px; }
+
+  /* Page title */
+  .page-title { margin-bottom: 20px; }
+  .page-title h2 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .page-title p  { font-size: 13px; color: var(--text-muted); }
 
   /* Cards */
-  .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
-  .card h2 { font-size: 15px; font-weight: 700; color: var(--teal-dark); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-  .card p.subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+  .card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; background: rgba(13,148,136,0.1); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .card-icon.blue  { background: var(--blue-light); }
+  .card-icon.amber { background: var(--amber-light); }
+  .card-icon.green { background: var(--green-light); }
+  .card-icon.gray  { background: var(--gray-light); }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--teal-dark); margin-bottom: 2px; }
+  .card-sub   { font-size: 12px; color: var(--text-muted); }
 
   /* Calculator grid */
   .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 600px) { .calc-grid { grid-template-columns: 1fr; } }
-
   .field { display: flex; flex-direction: column; gap: 4px; }
-  label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
-  input, select { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 14px; width: 100%; transition: border 0.15s; }
-  input:focus, select:focus { outline: none; border-color: var(--teal); }
-  input[readonly] { background: var(--gray-light); color: var(--text); font-weight: 600; }
+  label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  input, select { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; width: 100%; background: white; transition: border 0.15s, box-shadow 0.15s; color: var(--text); }
+  input:focus, select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+  input[readonly] { background: var(--gray-light); font-weight: 600; }
 
-  /* Result box */
-  .result-box { margin-top: 16px; background: var(--teal-light); border: 1.5px solid var(--teal); border-radius: 8px; padding: 14px 16px; }
-  .result-box .result-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teal-dark); margin-bottom: 4px; }
-  .result-box .result-value { font-size: 22px; font-weight: 800; color: var(--teal-dark); }
-  .result-box .result-sub { font-size: 12px; color: var(--teal-dark); margin-top: 2px; }
+  /* Result grid */
+  .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
+  .result-item { background: #f0fdf9; border: 1.5px solid #99f6e4; border-radius: 9px; padding: 12px; text-align: center; }
+  .ri-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal-dark); margin-bottom: 4px; }
+  .ri-value { font-size: 20px; font-weight: 800; color: var(--teal-dark); }
+  .ri-sub   { font-size: 10px; color: #5eead4; margin-top: 2px; }
 
-  .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 14px; }
-  .result-item { background: var(--teal-light); border: 1.5px solid var(--teal); border-radius: 8px; padding: 12px; text-align: center; }
-  .result-item .ri-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal-dark); margin-bottom: 4px; }
-  .result-item .ri-value { font-size: 20px; font-weight: 800; color: var(--teal-dark); }
-  .result-item .ri-sub { font-size: 11px; color: var(--teal-dark); }
+  /* Status boxes */
+  .warn  { background: var(--amber-light); border: 1.5px solid var(--amber); border-radius: 9px; padding: 12px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert { background: var(--red-light);   border: 1.5px solid var(--red);   border-radius: 9px; padding: 12px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 10px; align-items: flex-start; }
+  .good  { background: var(--green-light); border: 1.5px solid var(--green); border-radius: 9px; padding: 12px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 10px; align-items: flex-start; }
+  .warn-icon, .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
-  /* Warning */
-  .warn { background: var(--amber-light); border: 1.5px solid var(--amber); border-radius: 8px; padding: 12px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 8px; align-items: flex-start; }
-  .warn-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-  .alert { background: var(--red-light); border: 1.5px solid var(--red); border-radius: 8px; padding: 12px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 8px; align-items: flex-start; }
-  .alert-icon { font-size: 16px; flex-shrink: 0; }
-  .good { background: #d1fae5; border: 1.5px solid #10b981; border-radius: 8px; padding: 12px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 8px; align-items: flex-start; }
-
-  /* Divider */
   .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
-  /* Cheat sheet table */
+  /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { background: var(--gray-light); padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); border-bottom: 1.5px solid var(--border); }
-  td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #f9fafb; }
+  tr:hover td { background: #fafafa; }
   .mono { font-family: 'Courier New', monospace; font-weight: 700; color: var(--teal-dark); }
 
-  /* Formula card */
-  .formula { background: var(--blue-light); border: 1.5px solid var(--blue); border-radius: 8px; padding: 12px 16px; font-size: 13px; margin-bottom: 14px; }
-  .formula .f-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--blue); margin-bottom: 4px; }
-  .formula .f-body { font-family: 'Courier New', monospace; font-size: 14px; font-weight: 700; color: #1e40af; }
+  /* Formula */
+  .formula { background: var(--blue-light); border: 1.5px solid #93c5fd; border-radius: 9px; padding: 12px 16px; font-size: 13px; margin-bottom: 12px; }
+  .formula .f-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--blue); margin-bottom: 4px; }
+  .formula .f-body  { font-family: 'Courier New', monospace; font-size: 14px; font-weight: 700; color: #1e40af; }
 
-  /* Decision steps */
+  /* Steps */
   .step { display: flex; gap: 12px; margin-bottom: 12px; }
   .step-num { width: 28px; height: 28px; min-width: 28px; background: var(--teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
   .step-body h3 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-  .step-body p { font-size: 12px; color: var(--text-muted); }
+  .step-body p  { font-size: 12px; color: var(--text-muted); }
 
-  /* Section row tabs (within a card) */
-  .tab-row { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
-  .tab-btn { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; background: none; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--gray); transition: all 0.15s; }
+  /* Sub-tabs */
+  .tab-row { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; background: none; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--gray); transition: all 0.12s; }
+  .tab-btn:hover  { border-color: var(--teal); color: var(--teal); }
   .tab-btn.active { background: var(--teal); border-color: var(--teal); color: white; }
-  .sub-section { display: none; }
+  .sub-section        { display: none; }
   .sub-section.active { display: block; }
 
-  /* Calc btn */
-  .calc-btn { margin-top: 12px; background: var(--teal); color: white; border: none; border-radius: 7px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: background 0.15s; }
+  /* Calc button */
+  .calc-btn { margin-top: 12px; background: var(--teal); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: background 0.12s; }
   .calc-btn:hover { background: var(--teal-dark); }
 
-  /* Tag */
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
-  .tag-green { background: #d1fae5; color: #065f46; }
-  .tag-red { background: var(--red-light); color: #991b1b; }
-  .tag-amber { background: var(--amber-light); color: #92400e; }
+  /* Tags */
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .tag-green { background: var(--green-light); color: #065f46; }
+  .tag-red   { background: var(--red-light);   color: #991b1b; }
+  .tag-amber { background: var(--amber-light);  color: #92400e; }
 
   /* Tips list */
   .tips { list-style: none; }
-  .tips li { padding: 6px 0; padding-left: 18px; position: relative; font-size: 13px; border-bottom: 1px dashed var(--border); }
+  .tips li { padding: 7px 0; padding-left: 20px; position: relative; font-size: 13px; border-bottom: 1px dashed var(--border); line-height: 1.5; }
   .tips li:before { content: "→"; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
   .tips li:last-child { border-bottom: none; }
+
+  /* How to Use */
+  .how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .how-to-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 16px; background: white; }
+  .how-to-num { width: 32px; height: 32px; background: var(--teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin-bottom: 10px; }
+  .how-to-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .how-to-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  .tool-card { display: flex; align-items: flex-start; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: white; margin-bottom: 8px; cursor: pointer; transition: all 0.12s; text-align: left; width: 100%; border-left: 4px solid var(--border); }
+  .tool-card:hover { border-color: var(--teal); box-shadow: 0 2px 8px rgba(13,148,136,0.1); border-left-color: var(--teal); }
+  .tool-card-icon  { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .tool-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .tool-card-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+  .color-legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    body { overflow: auto; }
+    .app-shell { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; overflow-x: auto; padding: 8px 0; flex-wrap: nowrap; max-height: 52px; }
+    .sidebar-section-label { display: none; }
+    .sidebar-item { flex-direction: column; gap: 3px; padding: 6px 12px; font-size: 10px; border-right: none; border-bottom: 3px solid transparent; white-space: nowrap; }
+    .sidebar-item.active { border-right-color: transparent; border-bottom-color: var(--teal); }
+    .sidebar-icon { width: 22px; height: 22px; font-size: 12px; }
+    main { padding: 16px; overflow: visible; }
+    .calc-grid { grid-template-columns: 1fr; }
+    .how-to-grid { grid-template-columns: 1fr; }
+    .color-legend { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <h1>💊 Fountain Vitality — Med Math Reference</h1>
+  <div class="header-left">
+    <div class="header-icon">💊</div>
+    <div>
+      <div class="header-title">Med Math</div>
+      <div class="header-sub">Fountain Vitality — Clinical Ops</div>
+    </div>
   </div>
-  <span>Clinical Ops</span>
+  <div class="header-badge">Internal Tool</div>
 </header>
 
-<nav>
-  <button class="active" onclick="showSection('overview', this)">📋 Overview</button>
-  <button onclick="showSection('hrt-cream', this)">🧴 HRT Cream</button>
-  <button onclick="showSection('trt-inject', this)">💉 TRT Injections</button>
-  <button onclick="showSection('trt-cream', this)">🧴 TRT Cream</button>
-  <button onclick="showSection('dose-change', this)">🔄 Dose Changes</button>
-  <button onclick="showSection('early-refill', this)">⚠️ Early Refill</button>
-  <button onclick="showSection('cheatsheet', this)">📊 Cheat Sheets</button>
-</nav>
+<div class="app-shell">
+
+<aside class="sidebar">
+  <button class="sidebar-item active" onclick="showSection('how-to-use', this)">
+    <div class="sidebar-icon">📖</div>How to Use
+  </button>
+
+  <div class="sidebar-section-label">Calculators</div>
+
+  <button class="sidebar-item" onclick="showSection('overview', this)">
+    <div class="sidebar-icon">📋</div>Overview
+  </button>
+  <button class="sidebar-item" onclick="showSection('hrt-cream', this)">
+    <div class="sidebar-icon">🧴</div>HRT Cream
+  </button>
+  <button class="sidebar-item" onclick="showSection('trt-inject', this)">
+    <div class="sidebar-icon">💉</div>TRT Injections
+  </button>
+  <button class="sidebar-item" onclick="showSection('trt-cream', this)">
+    <div class="sidebar-icon">🧴</div>TRT Cream
+  </button>
+
+  <div class="sidebar-section-label">Decision Tools</div>
+
+  <button class="sidebar-item" onclick="showSection('dose-change', this)">
+    <div class="sidebar-icon">🔄</div>Dose Changes
+  </button>
+  <button class="sidebar-item" onclick="showSection('early-refill', this)">
+    <div class="sidebar-icon">⚠️</div>Early Refill
+  </button>
+
+  <div class="sidebar-section-label">Reference</div>
+
+  <button class="sidebar-item" onclick="showSection('cheatsheet', this)">
+    <div class="sidebar-icon">📊</div>Cheat Sheets
+  </button>
+</aside>
 
 <main>
 
-<!-- ═══════════════ OVERVIEW ═══════════════ -->
-<div class="section active" id="section-overview">
-  <div class="card">
-    <h2>🏁 When Does Math Matter?</h2>
-    <p class="subtitle">Three situations require supply calculations</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px;">
-      <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:14px;">
-        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">📦 Early Refill Request</div>
-        <div style="font-size:12px;color:var(--text-muted);">Patient says they are running out sooner than expected</div>
-      </div>
-      <div style="background:#fef9f0;border:1.5px solid #fcd34d;border-radius:8px;padding:14px;">
-        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">📬 Oversupply Complaint</div>
-        <div style="font-size:12px;color:var(--text-muted);">Patient has too much and wants to pause or delay</div>
-      </div>
-      <div style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:8px;padding:14px;">
-        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">📝 Dose Change</div>
-        <div style="font-size:12px;color:var(--text-muted);">Increase or decrease changes how long supply lasts</div>
-      </div>
-    </div>
-    <div class="warn"><span class="warn-icon">⚠️</span><div>The goal is always: <strong>given what was dispensed and what the patient should take, how long should this supply last — and does their report match?</strong></div></div>
+<!-- HOW TO USE -->
+<div class="section active" id="section-how-to-use">
+  <div class="page-title">
+    <h2>How to Use This Tool</h2>
+    <p>A quick guide for clinical ops staff at Fountain Vitality</p>
   </div>
 
   <div class="card">
-    <h2>📐 Core Formula</h2>
-    <p class="subtitle">Every calculation uses this same logic</p>
-    <div class="formula">
-      <div class="f-label">Days of Supply</div>
-      <div class="f-body">Total Volume Dispensed ÷ Daily Usage = Days of Supply</div>
+    <div class="card-header">
+      <div class="card-icon">🎯</div>
+      <div><div class="card-title">What this tool does</div><div class="card-sub">Medication math for HRT and TRT patients — no manual calculator needed</div></div>
     </div>
-    <div class="formula">
-      <div class="f-label">Expected Remaining</div>
-      <div class="f-body">Days of Supply − Days Since Dispensed = Days Remaining</div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">
+      Whenever a patient reports running out early, has too much medication, or had a dose change mid-cycle, you need to verify their supply math. This tool does that math for you — just enter the values from Akute and it shows you exactly how much they should have left.
+    </p>
+    <div class="how-to-grid">
+      <div class="how-to-card">
+        <div class="how-to-num">1</div>
+        <div class="how-to-title">Pick a calculator</div>
+        <div class="how-to-desc">Use the sidebar to navigate. Choose the calculator that matches the patient's medication type.</div>
+      </div>
+      <div class="how-to-card">
+        <div class="how-to-num">2</div>
+        <div class="how-to-title">Pull values from Akute</div>
+        <div class="how-to-desc">Go to Medications tab → "More Info". Note the fill date, volume dispensed, and prescribed dose.</div>
+      </div>
+      <div class="how-to-card">
+        <div class="how-to-num">3</div>
+        <div class="how-to-title">Enter the values</div>
+        <div class="how-to-desc">Type in the numbers — results appear automatically as you type. No submit button needed.</div>
+      </div>
+      <div class="how-to-card">
+        <div class="how-to-num">4</div>
+        <div class="how-to-title">Read the status</div>
+        <div class="how-to-desc">A colored box tells you if the patient's claim checks out. Green = on track. Amber = check further. Red = discrepancy.</div>
+      </div>
     </div>
+    <div style="background:var(--gray-light);border-radius:9px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;">Color codes</div>
+      <div class="color-legend">
+        <div class="legend-item" style="background:var(--green-light);">
+          <div class="legend-dot" style="background:#10b981;"></div>
+          <span style="color:#065f46;font-weight:600;">Green — on track</span>
+        </div>
+        <div class="legend-item" style="background:var(--amber-light);">
+          <div class="legend-dot" style="background:#f59e0b;"></div>
+          <span style="color:#92400e;font-weight:600;">Amber — review</span>
+        </div>
+        <div class="legend-item" style="background:var(--red-light);">
+          <div class="legend-dot" style="background:#ef4444;"></div>
+          <span style="color:#991b1b;font-weight:600;">Red — discrepancy</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🗂️</div>
+      <div><div class="card-title">Which calculator should I use?</div><div class="card-sub">Click any card to go directly to that tool</div></div>
+    </div>
+    <button class="tool-card" onclick="showSectionByName('overview')">
+      <div class="tool-card-icon">📋</div>
+      <div><div class="tool-card-title">Overview / Quick Calc</div><div class="tool-card-desc">Universal days-of-supply calculator. Good starting point if you're unsure which calc to use.</div></div>
+    </button>
+    <button class="tool-card" onclick="showSectionByName('hrt-cream')">
+      <div class="tool-card-icon">🧴</div>
+      <div><div class="tool-card-title">HRT Cream</div><div class="tool-card-desc">Female HRT cream. Handles Phase 1/1.5 (69 mL) and Phase 2 (22.5 mL). Also handles mid-cycle dose changes.</div></div>
+    </button>
+    <button class="tool-card" onclick="showSectionByName('trt-inject')">
+      <div class="tool-card-icon">💉</div>
+      <div><div class="tool-card-title">TRT Injections</div><div class="tool-card-desc">Testosterone cypionate injections. Converts mg → mL → syringe units and back.</div></div>
+    </button>
+    <button class="tool-card" onclick="showSectionByName('trt-cream')">
+      <div class="tool-card-icon">🧴</div>
+      <div><div class="tool-card-title">TRT Cream</div><div class="tool-card-desc">Testosterone cream for male patients. Controlled substance — use this before routing any early refill.</div></div>
+    </button>
+    <button class="tool-card" onclick="showSectionByName('dose-change')">
+      <div class="tool-card-icon">🔄</div>
+      <div><div class="tool-card-title">Dose Change Guide</div><div class="tool-card-desc">Step-by-step process for recalculating supply after a mid-cycle dose change.</div></div>
+    </button>
+    <button class="tool-card" onclick="showSectionByName('early-refill')">
+      <div class="tool-card-icon">⚠️</div>
+      <div><div class="tool-card-title">Early Refill Decision Framework</div><div class="tool-card-desc">Checklist for handling early refill requests — what to check, in what order, and how to route the outcome.</div></div>
+    </button>
+    <button class="tool-card" onclick="showSectionByName('cheatsheet')">
+      <div class="tool-card-icon">📊</div>
+      <div><div class="tool-card-title">Cheat Sheets</div><div class="tool-card-desc">Quick-reference tables for common doses, conversions, dispense volumes, and all core formulas.</div></div>
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">💡</div>
+      <div><div class="card-title">Important reminders</div><div class="card-sub">Read these before your first calculation</div></div>
+    </div>
+    <ul class="tips">
+      <li>Always get the fill date from Akute Medications tab → "More Info" — not from what the patient says</li>
+      <li>Phase 1 HRT patients receive <strong>2 dispensers</strong> (34.5 mL each = 69 mL total) — confirm before concluding they are out</li>
+      <li>TRT injection patients report doses in <strong>syringe units</strong>, not mg — always convert before comparing to the chart</li>
+      <li>Any dose change mid-cycle means you must do a <strong>two-segment calculation</strong> — the HRT Cream calculator has a built-in tab for this</li>
+      <li>When routing to R&amp;C, <strong>always paste your calculation</strong> in the ticket — show your work</li>
+      <li>TRT cream is a <strong>controlled substance</strong> — early refill requires a valid clinical reason and provider review</li>
+    </ul>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section" id="section-overview">
+  <div class="page-title">
+    <h2>Overview</h2>
+    <p>Universal supply calculator — works for any medication</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🏁</div>
+      <div><div class="card-title">When does math matter?</div><div class="card-sub">Three situations require supply calculations</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px;">
+      <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:9px;padding:14px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">📦 Early Refill Request</div><div style="font-size:12px;color:var(--text-muted);">Patient says they are running out sooner than expected</div></div>
+      <div style="background:#fef9f0;border:1.5px solid #fcd34d;border-radius:9px;padding:14px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">📬 Oversupply Complaint</div><div style="font-size:12px;color:var(--text-muted);">Patient has too much and wants to pause or delay</div></div>
+      <div style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:9px;padding:14px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">📝 Dose Change</div><div style="font-size:12px;color:var(--text-muted);">Increase or decrease changes how long supply lasts</div></div>
+    </div>
+    <div class="warn"><span class="warn-icon">⚠️</span><div>The goal is always: <strong>given what was dispensed and what the patient should take, how long should this supply last — and does their report match?</strong></div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">📐</div>
+      <div><div class="card-title">Core Formula</div><div class="card-sub">Every calculation uses this same logic</div></div>
+    </div>
+    <div class="formula"><div class="f-label">Days of Supply</div><div class="f-body">Total Volume Dispensed ÷ Daily Usage = Days of Supply</div></div>
+    <div class="formula"><div class="f-label">Expected Remaining</div><div class="f-body">Days of Supply − Days Since Dispensed = Days Remaining</div></div>
     <h3 style="margin:14px 0 8px;font-size:13px;">Before doing any math, check:</h3>
-    <ol style="padding-left:18px;font-size:13px;line-height:2;">
+    <ol style="padding-left:18px;font-size:13px;line-height:2.2;">
       <li>What does the <strong>prescription say</strong>? (Akute → Medications tab + most recent provider note)</li>
       <li>What is the patient <strong>actually doing</strong>? (Ask directly and/or request photos)</li>
     </ol>
   </div>
-
   <div class="card">
-    <h2>🚀 Quick Calculator</h2>
-    <p class="subtitle">Universal days of supply — works for any medication</p>
+    <div class="card-header">
+      <div class="card-icon">🚀</div>
+      <div><div class="card-title">Quick Calculator</div><div class="card-sub">Universal days of supply — works for any medication</div></div>
+    </div>
     <div class="calc-grid">
-      <div class="field">
-        <label>Total Dispensed (mL or count)</label>
-        <input type="number" id="ov-total" placeholder="e.g. 69" oninput="calcOverview()">
-      </div>
-      <div class="field">
-        <label>Daily Usage (mL or count)</label>
-        <input type="number" id="ov-daily" placeholder="e.g. 0.5" step="0.01" oninput="calcOverview()">
-      </div>
-      <div class="field">
-        <label>Fill Date</label>
-        <input type="date" id="ov-filldate" oninput="calcOverview()">
-      </div>
-      <div class="field">
-        <label>Check Date (leave blank = today)</label>
-        <input type="date" id="ov-checkdate" oninput="calcOverview()">
-      </div>
+      <div class="field"><label>Total Dispensed (mL or count)</label><input type="number" id="ov-total" placeholder="e.g. 69" oninput="calcOverview()"></div>
+      <div class="field"><label>Daily Usage (mL or count)</label><input type="number" id="ov-daily" placeholder="e.g. 0.5" step="0.01" oninput="calcOverview()"></div>
+      <div class="field"><label>Fill Date</label><input type="date" id="ov-filldate" oninput="calcOverview()"></div>
+      <div class="field"><label>Check Date (blank = today)</label><input type="date" id="ov-checkdate" oninput="calcOverview()"></div>
     </div>
     <div class="result-grid" id="ov-results" style="display:none;">
       <div class="result-item"><div class="ri-label">Days of Supply</div><div class="ri-value" id="ov-r1">—</div></div>
@@ -213,56 +408,41 @@
   </div>
 </div>
 
-<!-- ═══════════════ HRT CREAM ═══════════════ -->
+<!-- HRT CREAM -->
 <div class="section" id="section-hrt-cream">
+  <div class="page-title">
+    <h2>HRT Cream</h2>
+    <p>Click count → mL → days of supply for female HRT patients</p>
+  </div>
   <div class="card">
-    <h2>🧴 HRT Cream — Key Facts</h2>
-    <p class="subtitle">Most common calculation you will encounter</p>
-    <div style="background:var(--gray-light);border-radius:8px;padding:14px;margin-bottom:12px;">
-      <table>
-        <tr><th>Clicks</th><th>Volume</th></tr>
-        <tr><td>1 click</td><td class="mono">0.25 mL</td></tr>
-        <tr><td>2 clicks</td><td class="mono">0.50 mL</td></tr>
-        <tr><td>3 clicks</td><td class="mono">0.75 mL</td></tr>
-        <tr><td>4 clicks</td><td class="mono">1.00 mL</td></tr>
-      </table>
+    <div class="card-header">
+      <div class="card-icon">🧴</div>
+      <div><div class="card-title">Key Facts</div><div class="card-sub">Most common calculation you will encounter</div></div>
+    </div>
+    <div style="background:var(--gray-light);border-radius:9px;padding:14px;margin-bottom:12px;">
+      <table><tr><th>Clicks</th><th>Volume</th></tr><tr><td>1 click</td><td class="mono">0.25 mL</td></tr><tr><td>2 clicks</td><td class="mono">0.50 mL</td></tr><tr><td>3 clicks</td><td class="mono">0.75 mL</td></tr><tr><td>4 clicks</td><td class="mono">1.00 mL</td></tr></table>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;">
-      <div style="background:var(--blue-light);border-radius:8px;padding:10px;"><strong>Phase 1/1.5:</strong> Two separate dispensers (estradiol + testosterone) — 69 mL across both. Confirm patient received 1 or 2 dispensers before concluding they are out early.</div>
-      <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px;"><strong>Phase 2:</strong> Single combo cream dispenser. Typically 22.5 mL.</div>
+      <div style="background:var(--blue-light);border-radius:9px;padding:10px;"><strong>Phase 1/1.5:</strong> Two separate dispensers (estradiol + testosterone) — 69 mL across both. Confirm patient received 1 or 2 dispensers before concluding they are out early.</div>
+      <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:9px;padding:10px;"><strong>Phase 2:</strong> Single combo cream dispenser. Typically 22.5 mL.</div>
     </div>
   </div>
-
   <div class="card">
-    <h2>🧮 HRT Cream Calculator</h2>
-    <p class="subtitle">Calculate expected days of supply and remaining volume</p>
-
+    <div class="card-header">
+      <div class="card-icon">🧮</div>
+      <div><div class="card-title">HRT Cream Calculator</div><div class="card-sub">Calculate expected days of supply and remaining volume</div></div>
+    </div>
     <div class="tab-row">
       <button class="tab-btn active" onclick="showSub('hrt', 'standard', this)">Standard (No Dose Change)</button>
       <button class="tab-btn" onclick="showSub('hrt', 'dosechange', this)">Mid-Cycle Dose Change</button>
     </div>
-
-    <!-- Standard -->
     <div class="sub-section active" id="hrt-standard">
       <div class="calc-grid">
-        <div class="field">
-          <label>Total Dispensed Volume (mL)</label>
-          <input type="number" id="hrt-vol" placeholder="e.g. 69" oninput="calcHRT()">
-        </div>
-        <div class="field">
-          <label>Clicks Per Day</label>
-          <input type="number" id="hrt-clicks" placeholder="e.g. 2" oninput="calcHRT()">
-        </div>
-        <div class="field">
-          <label>Fill Date</label>
-          <input type="date" id="hrt-fill" oninput="calcHRT()">
-        </div>
-        <div class="field">
-          <label>Check Date (blank = today)</label>
-          <input type="date" id="hrt-check" oninput="calcHRT()">
-        </div>
+        <div class="field"><label>Total Dispensed Volume (mL)</label><input type="number" id="hrt-vol" placeholder="e.g. 69" oninput="calcHRT()"></div>
+        <div class="field"><label>Clicks Per Day</label><input type="number" id="hrt-clicks" placeholder="e.g. 2" oninput="calcHRT()"></div>
+        <div class="field"><label>Fill Date</label><input type="date" id="hrt-fill" oninput="calcHRT()"></div>
+        <div class="field"><label>Check Date (blank = today)</label><input type="date" id="hrt-check" oninput="calcHRT()"></div>
       </div>
-
       <div id="hrt-std-results" style="display:none;">
         <div class="result-grid">
           <div class="result-item"><div class="ri-label">Daily Usage</div><div class="ri-value" id="hrt-r-daily">—</div><div class="ri-sub">mL/day</div></div>
@@ -273,43 +453,23 @@
         <div id="hrt-std-status"></div>
       </div>
     </div>
-
-    <!-- Dose Change -->
     <div class="sub-section" id="hrt-dosechange">
       <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Enter the two segments: usage before and after the dose change.</div>
       <div class="calc-grid">
-        <div class="field">
-          <label>Total Dispensed (mL)</label>
-          <input type="number" id="hrt-dc-vol" placeholder="e.g. 22.5" oninput="calcHRTDose()">
-        </div>
-        <div class="field">
-          <label>Fill Date</label>
-          <input type="date" id="hrt-dc-fill" oninput="calcHRTDose()">
-        </div>
+        <div class="field"><label>Total Dispensed (mL)</label><input type="number" id="hrt-dc-vol" placeholder="e.g. 22.5" oninput="calcHRTDose()"></div>
+        <div class="field"><label>Fill Date</label><input type="date" id="hrt-dc-fill" oninput="calcHRTDose()"></div>
       </div>
       <hr class="divider">
       <div style="font-size:12px;font-weight:700;color:var(--teal-dark);margin-bottom:8px;">Segment 1 — Before Dose Change</div>
       <div class="calc-grid">
-        <div class="field">
-          <label>Clicks/Day (Seg 1)</label>
-          <input type="number" id="hrt-dc-c1" placeholder="e.g. 1" oninput="calcHRTDose()">
-        </div>
-        <div class="field">
-          <label>Dose Change Date</label>
-          <input type="date" id="hrt-dc-changedate" oninput="calcHRTDose()">
-        </div>
+        <div class="field"><label>Clicks/Day (Seg 1)</label><input type="number" id="hrt-dc-c1" placeholder="e.g. 1" oninput="calcHRTDose()"></div>
+        <div class="field"><label>Dose Change Date</label><input type="date" id="hrt-dc-changedate" oninput="calcHRTDose()"></div>
       </div>
       <hr class="divider">
       <div style="font-size:12px;font-weight:700;color:var(--teal-dark);margin-bottom:8px;">Segment 2 — After Dose Change</div>
       <div class="calc-grid">
-        <div class="field">
-          <label>Clicks/Day (Seg 2)</label>
-          <input type="number" id="hrt-dc-c2" placeholder="e.g. 2" oninput="calcHRTDose()">
-        </div>
-        <div class="field">
-          <label>Check Date (blank = today)</label>
-          <input type="date" id="hrt-dc-check" oninput="calcHRTDose()">
-        </div>
+        <div class="field"><label>Clicks/Day (Seg 2)</label><input type="number" id="hrt-dc-c2" placeholder="e.g. 2" oninput="calcHRTDose()"></div>
+        <div class="field"><label>Check Date (blank = today)</label><input type="date" id="hrt-dc-check" oninput="calcHRTDose()"></div>
       </div>
       <div id="hrt-dc-results" style="display:none;">
         <div class="result-grid">
@@ -321,57 +481,40 @@
         <div id="hrt-dc-status"></div>
       </div>
     </div>
-
     <div class="warn" style="margin-top:14px;"><span class="warn-icon">📸</span><div>Always request a dispenser photo before processing any early refill. The dispenser has measurement markings — compare the visible level against your calculation.</div></div>
   </div>
 </div>
 
-<!-- ═══════════════ TRT INJECTIONS ═══════════════ -->
+<!-- TRT INJECTIONS -->
 <div class="section" id="section-trt-inject">
+  <div class="page-title">
+    <h2>TRT Injections</h2>
+    <p>Testosterone Cypionate • 200 mg/mL • converts mg → mL → syringe units</p>
+  </div>
   <div class="card">
-    <h2>💉 TRT Injection — Key Facts</h2>
-    <p class="subtitle">Testosterone Cypionate • 200 mg/mL • 10 mL vial</p>
+    <div class="card-header">
+      <div class="card-icon">💉</div>
+      <div><div class="card-title">Key Facts</div><div class="card-sub">Testosterone Cypionate • 200 mg/mL • 10 mL vial</div></div>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:12px;">
-      <div style="background:var(--gray-light);border-radius:8px;padding:10px;"><strong>Standard concentration:</strong> 200 mg/mL<br><strong>Vial size:</strong> 10 mL = 2,000 mg total<br><strong>biw</strong> = twice weekly (e.g., Mon + Thu)</div>
-      <div style="background:var(--gray-light);border-radius:8px;padding:10px;"><strong>Syringe units:</strong> 1 unit = 0.01 mL on a standard 1 mL syringe<br>Volume (mL) × 100 = syringe units</div>
+      <div style="background:var(--gray-light);border-radius:9px;padding:10px;"><strong>Standard concentration:</strong> 200 mg/mL<br><strong>Vial size:</strong> 10 mL = 2,000 mg total<br><strong>biw</strong> = twice weekly (e.g., Mon + Thu)</div>
+      <div style="background:var(--gray-light);border-radius:9px;padding:10px;"><strong>Syringe units:</strong> 1 unit = 0.01 mL on a standard 1 mL syringe<br>Volume (mL) × 100 = syringe units</div>
     </div>
     <div class="warn"><span class="warn-icon">⚠️</span><div>If a patient draws to a unit mark not in their chart (e.g., "I draw to 45" but chart says 60 mg biw = 30 units), they may be <strong>overdosing</strong>. Document and notify provider immediately.</div></div>
   </div>
-
   <div class="card">
-    <h2>🧮 TRT Injection Calculator</h2>
-    <p class="subtitle">Converts mg dose → mL → syringe units → days of supply</p>
-    <div class="calc-grid">
-      <div class="field">
-        <label>Prescribed Dose (mg per injection)</label>
-        <input type="number" id="trt-mg" placeholder="e.g. 60" oninput="calcTRT()">
-      </div>
-      <div class="field">
-        <label>Concentration (mg/mL)</label>
-        <input type="number" id="trt-conc" value="200" oninput="calcTRT()">
-      </div>
-      <div class="field">
-        <label>Injections Per Week</label>
-        <select id="trt-freq" onchange="calcTRT()">
-          <option value="2">biw — 2x/week</option>
-          <option value="1">qw — 1x/week</option>
-          <option value="3">3x/week</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Vial Size (mL)</label>
-        <input type="number" id="trt-vial" value="10" oninput="calcTRT()">
-      </div>
-      <div class="field">
-        <label>Number of Vials Dispensed</label>
-        <input type="number" id="trt-nvials" value="1" oninput="calcTRT()">
-      </div>
-      <div class="field">
-        <label>Fill Date (optional)</label>
-        <input type="date" id="trt-fill" oninput="calcTRT()">
-      </div>
+    <div class="card-header">
+      <div class="card-icon">🧮</div>
+      <div><div class="card-title">TRT Injection Calculator</div><div class="card-sub">Converts mg dose → mL → syringe units → days of supply</div></div>
     </div>
-
+    <div class="calc-grid">
+      <div class="field"><label>Prescribed Dose (mg per injection)</label><input type="number" id="trt-mg" placeholder="e.g. 60" oninput="calcTRT()"></div>
+      <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="trt-conc" value="200" oninput="calcTRT()"></div>
+      <div class="field"><label>Injections Per Week</label><select id="trt-freq" onchange="calcTRT()"><option value="2">biw — 2x/week</option><option value="1">qw — 1x/week</option><option value="3">3x/week</option></select></div>
+      <div class="field"><label>Vial Size (mL)</label><input type="number" id="trt-vial" value="10" oninput="calcTRT()"></div>
+      <div class="field"><label>Number of Vials Dispensed</label><input type="number" id="trt-nvials" value="1" oninput="calcTRT()"></div>
+      <div class="field"><label>Fill Date (optional)</label><input type="date" id="trt-fill" oninput="calcTRT()"></div>
+    </div>
     <div id="trt-results" style="display:none;">
       <div class="result-grid">
         <div class="result-item"><div class="ri-label">mL per Injection</div><div class="ri-value" id="trt-r-ml">—</div><div class="ri-sub">mL</div></div>
@@ -382,19 +525,14 @@
       <div id="trt-runout" style="margin-top:10px;"></div>
     </div>
   </div>
-
   <div class="card">
-    <h2>🔁 Convert From Units → mg</h2>
-    <p class="subtitle">Patient reports their dose in syringe units — find the actual mg</p>
+    <div class="card-header">
+      <div class="card-icon blue">🔁</div>
+      <div><div class="card-title">Convert Units → mg</div><div class="card-sub">Patient reports their dose in syringe units — find the actual mg</div></div>
+    </div>
     <div class="calc-grid">
-      <div class="field">
-        <label>Syringe Units Reported by Patient</label>
-        <input type="number" id="conv-units" placeholder="e.g. 45" oninput="calcConvert()">
-      </div>
-      <div class="field">
-        <label>Concentration (mg/mL)</label>
-        <input type="number" id="conv-conc" value="200" oninput="calcConvert()">
-      </div>
+      <div class="field"><label>Syringe Units Reported by Patient</label><input type="number" id="conv-units" placeholder="e.g. 45" oninput="calcConvert()"></div>
+      <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="conv-conc" value="200" oninput="calcConvert()"></div>
     </div>
     <div id="conv-results" style="display:none;">
       <div class="result-grid">
@@ -405,43 +543,32 @@
   </div>
 </div>
 
-<!-- ═══════════════ TRT CREAM ═══════════════ -->
+<!-- TRT CREAM -->
 <div class="section" id="section-trt-cream">
+  <div class="page-title">
+    <h2>TRT Cream</h2>
+    <p>Testosterone topical • controlled substance • same click math as HRT cream</p>
+  </div>
   <div class="card">
-    <h2>🧴 TRT Cream — Key Facts</h2>
-    <p class="subtitle">Testosterone topical • same math as HRT cream, male patients</p>
-    <div style="background:var(--gray-light);border-radius:8px;padding:14px;margin-bottom:12px;">
-      <table>
-        <tr><th>Reference</th><th>Value</th></tr>
-        <tr><td>1 click</td><td class="mono">0.25 mL</td></tr>
-        <tr><td>Typical starting dose</td><td class="mono">3–4 clicks (0.75–1 mL/day)</td></tr>
-        <tr><td>Maximum dose</td><td class="mono">8 clicks (2 mL/day)</td></tr>
-        <tr><td>Typical dispense volume</td><td class="mono">28 mL</td></tr>
-        <tr><td>Refill cadence</td><td class="mono">Every 28 days</td></tr>
-      </table>
+    <div class="card-header">
+      <div class="card-icon">🧴</div>
+      <div><div class="card-title">Key Facts</div><div class="card-sub">Testosterone topical • male patients</div></div>
+    </div>
+    <div style="background:var(--gray-light);border-radius:9px;padding:14px;margin-bottom:12px;">
+      <table><tr><th>Reference</th><th>Value</th></tr><tr><td>1 click</td><td class="mono">0.25 mL</td></tr><tr><td>Typical starting dose</td><td class="mono">3–4 clicks (0.75–1 mL/day)</td></tr><tr><td>Maximum dose</td><td class="mono">8 clicks (2 mL/day)</td></tr><tr><td>Typical dispense volume</td><td class="mono">28 mL</td></tr><tr><td>Refill cadence</td><td class="mono">Every 28 days</td></tr></table>
     </div>
     <div class="warn"><span class="warn-icon">🚨</span><div>TRT cream is a <strong>controlled substance</strong>. Early refills require a valid clinical reason. Confirm dosing compliance before routing anywhere.</div></div>
   </div>
-
   <div class="card">
-    <h2>🧮 TRT Cream Calculator</h2>
+    <div class="card-header">
+      <div class="card-icon">🧮</div>
+      <div><div class="card-title">TRT Cream Calculator</div><div class="card-sub">Days of supply and expected remaining volume</div></div>
+    </div>
     <div class="calc-grid">
-      <div class="field">
-        <label>Total Dispensed (mL)</label>
-        <input type="number" id="trtc-vol" value="28" oninput="calcTRTCream()">
-      </div>
-      <div class="field">
-        <label>Clicks Per Day</label>
-        <input type="number" id="trtc-clicks" placeholder="e.g. 4" oninput="calcTRTCream()">
-      </div>
-      <div class="field">
-        <label>Fill Date</label>
-        <input type="date" id="trtc-fill" oninput="calcTRTCream()">
-      </div>
-      <div class="field">
-        <label>Check Date (blank = today)</label>
-        <input type="date" id="trtc-check" oninput="calcTRTCream()">
-      </div>
+      <div class="field"><label>Total Dispensed (mL)</label><input type="number" id="trtc-vol" value="28" oninput="calcTRTCream()"></div>
+      <div class="field"><label>Clicks Per Day</label><input type="number" id="trtc-clicks" placeholder="e.g. 4" oninput="calcTRTCream()"></div>
+      <div class="field"><label>Fill Date</label><input type="date" id="trtc-fill" oninput="calcTRTCream()"></div>
+      <div class="field"><label>Check Date (blank = today)</label><input type="date" id="trtc-check" oninput="calcTRTCream()"></div>
     </div>
     <div id="trtc-results" style="display:none;">
       <div class="result-grid">
@@ -455,118 +582,110 @@
   </div>
 </div>
 
-<!-- ═══════════════ DOSE CHANGE ═══════════════ -->
+<!-- DOSE CHANGE -->
 <div class="section" id="section-dose-change">
+  <div class="page-title">
+    <h2>Dose Change Guide</h2>
+    <p>Any mid-cycle dose change requires a two-segment calculation</p>
+  </div>
   <div class="card">
-    <h2>🔄 Dose Change — Recalculation Guide</h2>
-    <p class="subtitle">Any mid-cycle dose change requires segmented calculation</p>
+    <div class="card-header">
+      <div class="card-icon">🔄</div>
+      <div><div class="card-title">Dose Change — Recalculation Steps</div><div class="card-sub">Follow this process whenever the provider changes the dose between fills</div></div>
+    </div>
     <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Note the dose change date</h3><p>Found in provider visit note or Akute chart note</p></div></div>
     <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Calculate usage at old dose</h3><p>Fill date → dose change date × old daily usage = mL used</p></div></div>
     <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Subtract from total dispensed</h3><p>Total dispensed − Segment 1 usage = remaining at change date</p></div></div>
     <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Calculate remaining days at new dose</h3><p>Remaining ÷ new daily usage = days left after change</p></div></div>
     <div class="step"><div class="step-num">5</div><div class="step-body"><h3>Find new run-out date</h3><p>Dose change date + days remaining = new estimated run-out date</p></div></div>
-
+    <div style="font-size:12px;color:var(--teal-dark);background:var(--teal-light);border-radius:8px;padding:10px;margin-top:4px;">
+      💡 Use <strong>HRT Cream → Mid-Cycle Dose Change tab</strong> for the automated version of steps 2–5.
+    </div>
     <hr class="divider">
     <table>
       <tr><th>Situation</th><th>Action</th></tr>
-      <tr><td><strong>Provider increases dose</strong></td><td>Recalculate immediately. Supply runs out sooner. Flag R&C with new estimated run-out date.</td></tr>
+      <tr><td><strong>Provider increases dose</strong></td><td>Recalculate immediately. Supply runs out sooner. Flag R&amp;C with new estimated run-out date.</td></tr>
       <tr><td><strong>Provider decreases dose</strong></td><td>Recalculate. Patient may have more supply than expected. Educate on BUD.</td></tr>
-      <tr><td><strong>Patient self-adjusts dose</strong></td><td>Document in Akute. Notify provider. Calculate at <em>both</em> prescribed and self-reported dose to understand discrepancy.</td></tr>
+      <tr><td><strong>Patient self-adjusts dose</strong></td><td>Document in Akute. Notify provider. Calculate at <em>both</em> prescribed and self-reported dose.</td></tr>
       <tr><td><strong>Patient misses doses</strong></td><td>More supply than expected — educate on compliance.</td></tr>
       <tr><td><strong>Patient switches form</strong></td><td>New calculation from switch date. Old supply math no longer applies.</td></tr>
     </table>
   </div>
 </div>
 
-<!-- ═══════════════ EARLY REFILL ═══════════════ -->
+<!-- EARLY REFILL -->
 <div class="section" id="section-early-refill">
+  <div class="page-title">
+    <h2>Early Refill</h2>
+    <p>Use every time a patient reports running low before expected refill date</p>
+  </div>
   <div class="card">
-    <h2>⚠️ Early Refill — Decision Framework</h2>
-    <p class="subtitle">Use every time a patient reports running low before expected refill date</p>
-
+    <div class="card-header">
+      <div class="card-icon amber">⚠️</div>
+      <div><div class="card-title">Early Refill Decision Framework</div><div class="card-sub">Six-step checklist before routing anything</div></div>
+    </div>
     <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Verify fill date and dispense amount</h3><p>Akute → Medications tab. Note fill date, total volume/count, and prescribed dose.</p></div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Do the math</h3><p>Calculate expected days of supply → days elapsed → how much should remain.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Do the math</h3><p>Calculate expected days of supply → days elapsed → how much should remain. Use the appropriate calculator in the sidebar.</p></div></div>
     <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Request photos or count</h3><p>Ask for dispenser photo or remaining tablet count. Compare to your calculation.</p></div></div>
     <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Check for dose changes</h3><p>Any dose increases since fill date? Recalculate with segments.</p></div></div>
     <div class="step"><div class="step-num">5</div><div class="step-body"><h3>Check for compliance issues</h3><p>Using more than prescribed? Self-adjusting? Document and notify provider.</p></div></div>
     <div class="step"><div class="step-num">6</div><div class="step-body"><h3>Determine next step</h3><p>See outcomes below.</p></div></div>
-
     <hr class="divider">
     <table>
       <tr><th>Outcome</th><th>Action</th></tr>
-      <tr><td><span class="tag tag-green">Math checks out</span> — Patient genuinely running low</td><td>Route to R&C with calculation documented. <strong>Always show your work.</strong></td></tr>
+      <tr><td><span class="tag tag-green">Math checks out</span> — Patient genuinely running low</td><td>Route to R&amp;C with calculation documented. <strong>Always show your work.</strong></td></tr>
       <tr><td><span class="tag tag-amber">Math does not check out</span></td><td>Educate on correct dosing <em>before</em> routing anywhere.</td></tr>
       <tr><td><span class="tag tag-red">TRT Injection running out early</span> — no refills remain</td><td>Requires video visit. Cannot issue early refill without provider review.</td></tr>
     </table>
-
-    <div class="warn" style="margin-top:12px;"><span class="warn-icon">📝</span><div>When routing to R&C for an early refill, <strong>always include your calculation in the ticket</strong> — show your work.</div></div>
+    <div class="warn" style="margin-top:12px;"><span class="warn-icon">📝</span><div>When routing to R&amp;C for an early refill, <strong>always include your calculation in the ticket</strong> — show your work.</div></div>
   </div>
 </div>
 
-<!-- ═══════════════ CHEAT SHEETS ═══════════════ -->
+<!-- CHEAT SHEETS -->
 <div class="section" id="section-cheatsheet">
-
-  <div class="card">
-    <h2>💉 Testosterone Cypionate Cheat Sheet (200 mg/mL)</h2>
-    <p class="subtitle">Quick dose → mL → syringe units conversion</p>
-    <table>
-      <tr><th>Dose (mg)</th><th>Volume (mL)</th><th>Syringe Units</th></tr>
-      <tr><td>40 mg</td><td class="mono">0.20 mL</td><td class="mono">20 units</td></tr>
-      <tr><td>50 mg</td><td class="mono">0.25 mL</td><td class="mono">25 units</td></tr>
-      <tr><td>60 mg</td><td class="mono">0.30 mL</td><td class="mono">30 units</td></tr>
-      <tr><td>70 mg</td><td class="mono">0.35 mL</td><td class="mono">35 units</td></tr>
-      <tr><td>80 mg</td><td class="mono">0.40 mL</td><td class="mono">40 units</td></tr>
-      <tr><td>90 mg</td><td class="mono">0.45 mL</td><td class="mono">45 units</td></tr>
-      <tr><td>100 mg</td><td class="mono">0.50 mL</td><td class="mono">50 units</td></tr>
-    </table>
+  <div class="page-title">
+    <h2>Cheat Sheets</h2>
+    <p>Quick-reference tables for common doses, conversions, and formulas</p>
   </div>
-
   <div class="card">
-    <h2>🧴 HRT/TRT Cream Click-to-mL Conversion</h2>
-    <table>
-      <tr><th>Clicks</th><th>mL</th><th>Common Usage</th></tr>
-      <tr><td>1</td><td class="mono">0.25 mL</td><td>Low dose / starting dose HRT</td></tr>
-      <tr><td>2</td><td class="mono">0.50 mL</td><td>Typical HRT maintenance</td></tr>
-      <tr><td>3</td><td class="mono">0.75 mL</td><td>TRT cream starting dose</td></tr>
-      <tr><td>4</td><td class="mono">1.00 mL</td><td>TRT cream standard / HRT high dose</td></tr>
-      <tr><td>6</td><td class="mono">1.50 mL</td><td>TRT cream higher dose</td></tr>
-      <tr><td>8</td><td class="mono">2.00 mL</td><td>TRT cream maximum dose</td></tr>
-    </table>
+    <div class="card-header">
+      <div class="card-icon">💉</div>
+      <div><div class="card-title">Testosterone Cypionate (200 mg/mL)</div><div class="card-sub">Quick dose → mL → syringe units conversion</div></div>
+    </div>
+    <table><tr><th>Dose (mg)</th><th>Volume (mL)</th><th>Syringe Units</th></tr><tr><td>40 mg</td><td class="mono">0.20 mL</td><td class="mono">20 units</td></tr><tr><td>50 mg</td><td class="mono">0.25 mL</td><td class="mono">25 units</td></tr><tr><td>60 mg</td><td class="mono">0.30 mL</td><td class="mono">30 units</td></tr><tr><td>70 mg</td><td class="mono">0.35 mL</td><td class="mono">35 units</td></tr><tr><td>80 mg</td><td class="mono">0.40 mL</td><td class="mono">40 units</td></tr><tr><td>90 mg</td><td class="mono">0.45 mL</td><td class="mono">45 units</td></tr><tr><td>100 mg</td><td class="mono">0.50 mL</td><td class="mono">50 units</td></tr></table>
   </div>
-
   <div class="card">
-    <h2>📐 Formula Summary</h2>
-    <table>
-      <tr><th>Formula</th><th>Calculation</th></tr>
-      <tr><td>Days of supply (cream)</td><td class="mono">Total volume ÷ daily usage</td></tr>
-      <tr><td>Expected remaining (cream)</td><td class="mono">Days of supply − days elapsed</td></tr>
-      <tr><td>mL per injection (TRT)</td><td class="mono">Dose (mg) ÷ concentration (mg/mL)</td></tr>
-      <tr><td>Syringe units from mL</td><td class="mono">mL × 100</td></tr>
-      <tr><td>mg from syringe units</td><td class="mono">Units ÷ 100 × concentration (mg/mL)</td></tr>
-      <tr><td>Days of supply (injection)</td><td class="mono">(Total mL ÷ weekly mL) × 7</td></tr>
-      <tr><td>Daily usage from clicks</td><td class="mono">Clicks × 0.25 mL</td></tr>
-    </table>
+    <div class="card-header">
+      <div class="card-icon">🧴</div>
+      <div><div class="card-title">HRT/TRT Cream Click-to-mL Conversion</div></div>
+    </div>
+    <table><tr><th>Clicks</th><th>mL</th><th>Common Usage</th></tr><tr><td>1</td><td class="mono">0.25 mL</td><td>Low dose / starting dose HRT</td></tr><tr><td>2</td><td class="mono">0.50 mL</td><td>Typical HRT maintenance</td></tr><tr><td>3</td><td class="mono">0.75 mL</td><td>TRT cream starting dose</td></tr><tr><td>4</td><td class="mono">1.00 mL</td><td>TRT cream standard / HRT high dose</td></tr><tr><td>6</td><td class="mono">1.50 mL</td><td>TRT cream higher dose</td></tr><tr><td>8</td><td class="mono">2.00 mL</td><td>TRT cream maximum dose</td></tr></table>
   </div>
-
   <div class="card">
-    <h2>📦 Common Dispense Volumes</h2>
-    <table>
-      <tr><th>Medication</th><th>Volume / Qty</th><th>Notes</th></tr>
-      <tr><td>Phase 1/1.5 HRT Cream</td><td class="mono">69 mL total</td><td>Two dispensers (34.5 mL each)</td></tr>
-      <tr><td>Phase 2 HRT Cream (combo)</td><td class="mono">22.5 mL</td><td>Single dispenser</td></tr>
-      <tr><td>TRT Cream</td><td class="mono">28 mL</td><td>Refills every 28 days</td></tr>
-      <tr><td>TRT Injection (Tcyp)</td><td class="mono">10 mL vial</td><td>200 mg/mL = 2,000 mg total</td></tr>
-    </table>
+    <div class="card-header">
+      <div class="card-icon blue">📐</div>
+      <div><div class="card-title">Formula Summary</div></div>
+    </div>
+    <table><tr><th>Formula</th><th>Calculation</th></tr><tr><td>Days of supply (cream)</td><td class="mono">Total volume ÷ daily usage</td></tr><tr><td>Expected remaining (cream)</td><td class="mono">Days of supply − days elapsed</td></tr><tr><td>mL per injection (TRT)</td><td class="mono">Dose (mg) ÷ concentration (mg/mL)</td></tr><tr><td>Syringe units from mL</td><td class="mono">mL × 100</td></tr><tr><td>mg from syringe units</td><td class="mono">Units ÷ 100 × concentration (mg/mL)</td></tr><tr><td>Days of supply (injection)</td><td class="mono">(Total mL ÷ weekly mL) × 7</td></tr><tr><td>Daily usage from clicks</td><td class="mono">Clicks × 0.25 mL</td></tr></table>
   </div>
-
   <div class="card">
-    <h2>💡 Tips & Common Pitfalls</h2>
+    <div class="card-header">
+      <div class="card-icon green">📦</div>
+      <div><div class="card-title">Common Dispense Volumes</div></div>
+    </div>
+    <table><tr><th>Medication</th><th>Volume / Qty</th><th>Notes</th></tr><tr><td>Phase 1/1.5 HRT Cream</td><td class="mono">69 mL total</td><td>Two dispensers (34.5 mL each)</td></tr><tr><td>Phase 2 HRT Cream (combo)</td><td class="mono">22.5 mL</td><td>Single dispenser</td></tr><tr><td>TRT Cream</td><td class="mono">28 mL</td><td>Refills every 28 days</td></tr><tr><td>TRT Injection (Tcyp)</td><td class="mono">10 mL vial</td><td>200 mg/mL = 2,000 mg total</td></tr></table>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">💡</div>
+      <div><div class="card-title">Tips &amp; Common Pitfalls</div></div>
+    </div>
     <ul class="tips">
       <li>Phase 1 patients receive 2 dispensers — always confirm before concluding they are out early</li>
       <li>Check Akute Medications tab → "More Info" for days supply — not the IC sidebar (which can lag)</li>
       <li>Use fill date from Akute or shipment tracking link in the IC right-hand sidebar</li>
       <li>Dose prescribed is in mg for TRT injections — patients often report in syringe units; always convert</li>
-      <li>When routing to R&C, document your full calculation in the ticket</li>
+      <li>When routing to R&amp;C, document your full calculation in the ticket</li>
       <li>Self-adjusting testosterone dose: document and notify provider immediately</li>
       <li>TRT injection early refill with no refills remaining → requires video visit, no exceptions</li>
       <li>Dose change mid-cycle = two-segment calculation, not a simple average</li>
@@ -575,14 +694,11 @@
 </div>
 
 </main>
+</div>
 
 <script>
-// ── Helpers ──────────────────────────────────────────────────
 function today() { return new Date().toISOString().split('T')[0]; }
-function dateDiff(a, b) { // days from a to b
-  const da = new Date(a), db = new Date(b);
-  return Math.round((db - da) / 86400000);
-}
+function dateDiff(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 function addDays(dateStr, days) {
   const d = new Date(dateStr);
   d.setDate(d.getDate() + Math.round(days));
@@ -591,15 +707,18 @@ function addDays(dateStr, days) {
 function fmt(n, dec=1) { return isNaN(n) ? '—' : (+n).toFixed(dec); }
 function fmtInt(n) { return isNaN(n) ? '—' : Math.round(n).toString(); }
 
-// ── Nav ──────────────────────────────────────────────────────
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
   btn.classList.add('active');
 }
 
-// ── Sub-tabs ─────────────────────────────────────────────────
+function showSectionByName(id) {
+  const btn = document.querySelector(`.sidebar-item[onclick="showSection('${id}', this)"]`);
+  if (btn) showSection(id, btn);
+}
+
 function showSub(prefix, id, btn) {
   const card = btn.closest('.card');
   card.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
@@ -608,7 +727,6 @@ function showSub(prefix, id, btn) {
   btn.classList.add('active');
 }
 
-// ── Overview Quick Calc ───────────────────────────────────────
 function calcOverview() {
   const total = parseFloat(document.getElementById('ov-total').value);
   const daily = parseFloat(document.getElementById('ov-daily').value);
@@ -618,24 +736,20 @@ function calcOverview() {
   const dos = total / daily;
   document.getElementById('ov-results').style.display = 'grid';
   document.getElementById('ov-r1').textContent = fmt(dos,1);
-  let elapsedEl = document.getElementById('ov-r2');
-  let remainEl  = document.getElementById('ov-r3');
-  let runoutEl  = document.getElementById('ov-r4');
-  let runoutSub = document.getElementById('ov-r4sub');
   if (fill) {
     const elapsed = dateDiff(fill, check);
     const remain  = dos - elapsed;
-    elapsedEl.textContent = fmtInt(elapsed);
-    remainEl.textContent  = fmt(Math.max(0, remain * daily),1) + ' mL / ' + fmtInt(Math.max(0,remain)) + 'd';
-    runoutEl.textContent  = addDays(fill, dos);
-    runoutSub.textContent = remain >= 0 ? fmtInt(remain) + ' days left' : 'RAN OUT ~' + fmtInt(-remain) + ' days ago';
+    document.getElementById('ov-r2').textContent = fmtInt(elapsed);
+    document.getElementById('ov-r3').textContent = fmt(Math.max(0, remain * daily),1) + ' mL / ' + fmtInt(Math.max(0,remain)) + 'd';
+    document.getElementById('ov-r4').textContent = addDays(fill, dos);
+    document.getElementById('ov-r4sub').textContent = remain >= 0 ? fmtInt(remain) + ' days left' : 'RAN OUT ~' + fmtInt(-remain) + ' days ago';
   } else {
-    elapsedEl.textContent = '—'; remainEl.textContent = '—'; runoutEl.textContent = '—'; runoutSub.textContent = '';
+    ['ov-r2','ov-r3','ov-r4'].forEach(id => document.getElementById(id).textContent = '—');
+    document.getElementById('ov-r4sub').textContent = '';
   }
   statusBox('ov-status', '');
 }
 
-// ── HRT Standard ────────────────────────────────────────────
 function calcHRT() {
   const vol    = parseFloat(document.getElementById('hrt-vol').value);
   const clicks = parseFloat(document.getElementById('hrt-clicks').value);
@@ -664,7 +778,6 @@ function calcHRT() {
   statusBox('hrt-std-status', msg);
 }
 
-// ── HRT Dose Change ──────────────────────────────────────────
 function calcHRTDose() {
   const vol      = parseFloat(document.getElementById('hrt-dc-vol').value);
   const fill     = document.getElementById('hrt-dc-fill').value;
@@ -693,14 +806,13 @@ function calcHRTDose() {
   statusBox('hrt-dc-status', msg);
 }
 
-// ── TRT Injection ────────────────────────────────────────────
 function calcTRT() {
-  const mg      = parseFloat(document.getElementById('trt-mg').value);
-  const conc    = parseFloat(document.getElementById('trt-conc').value);
-  const freq    = parseInt(document.getElementById('trt-freq').value);
-  const vial    = parseFloat(document.getElementById('trt-vial').value);
-  const nvials  = parseFloat(document.getElementById('trt-nvials').value);
-  const fill    = document.getElementById('trt-fill').value;
+  const mg     = parseFloat(document.getElementById('trt-mg').value);
+  const conc   = parseFloat(document.getElementById('trt-conc').value);
+  const freq   = parseInt(document.getElementById('trt-freq').value);
+  const vial   = parseFloat(document.getElementById('trt-vial').value);
+  const nvials = parseFloat(document.getElementById('trt-nvials').value);
+  const fill   = document.getElementById('trt-fill').value;
   if (isNaN(mg) || isNaN(conc) || conc <= 0) { document.getElementById('trt-results').style.display='none'; return; }
   const mlPerInj = mg / conc;
   const units    = mlPerInj * 100;
@@ -722,7 +834,6 @@ function calcTRT() {
   statusBox('trt-runout', msg);
 }
 
-// ── Convert Units → mg ───────────────────────────────────────
 function calcConvert() {
   const units = parseFloat(document.getElementById('conv-units').value);
   const conc  = parseFloat(document.getElementById('conv-conc').value);
@@ -734,7 +845,6 @@ function calcConvert() {
   document.getElementById('conv-mg').textContent = fmt(mg,0) + ' mg';
 }
 
-// ── TRT Cream ────────────────────────────────────────────────
 function calcTRTCream() {
   const vol    = parseFloat(document.getElementById('trtc-vol').value);
   const clicks = parseFloat(document.getElementById('trtc-clicks').value);
@@ -763,7 +873,6 @@ function calcTRTCream() {
   statusBox('trtc-status', msg);
 }
 
-// ── Status box renderer ───────────────────────────────────────
 function statusBox(id, msg) {
   const el = document.getElementById(id);
   if (!msg) { el.innerHTML = ''; return; }
