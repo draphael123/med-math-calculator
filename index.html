@@ -4,6 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Med Math — Fountain Vitality</title>
+<script>
+(function(){
+  var pw = 'fountain2026!';
+  var key = 'fv_auth';
+  if(localStorage.getItem(key) !== '1'){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.style.overflow = 'hidden';
+      var overlay = document.createElement('div');
+      overlay.id = 'auth-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:#1a3848;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+      overlay.innerHTML = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAA2CAYAAACx1wu7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAe5SURBVGhD7ZhtcFTVGcd/5+5udjfZkJAETMIQCIQQCO/vCIIgCu3UWmDqFFsRW3W09YN1ygcH2qZ1bKudSi2jVFo6sSpCp8VRkAhDKWVKpwg4oOX9TUKyIclu3rPZt3uffkiycO8uZENIR2b4zdwP9znPPfd/n3POc55zlYgItwGa1fBl5Y7QW80dobea20ao6s/0FIlE0XUdALvdjt1us7okTb8IFRGqvbVs+UsFBw4cxuVysmD+TB782kJyc3NQSlkf6RnpBy5d8sqC+1eK3V0idleJ2F1jZEDWZHn8iRfkclWN1T0p+mWO/qn8rxw8eBQR6boM2tsD7Pn7AXZ89A+re1L0i9CDh44RiUYBBerq5fM1cPbcJat7UvSL0KyBmWgqvmuny0l6eprVnBTxvd0CHvr6fTjsDrNRYFjBEGbNnGS2J0m/CF3ywD3MuXsKiqurO92TxoL5s5gze4rJN2msq+tWcfjI5+IZOElsrtHicI+VOfO+JadOXbC6JU3SQoPBkCxc9JhMnbFUVq5aLeV/3iZeb53VLYZhGFL28/Vid42R/IK5svm97WIYhtUtxpVQSLbV1cvac+fl8RMnZc1580clnfCDwRBTZyznzNnzXTNGyMsbxMpHl/LdVcsZVpCPzWbeedraAkybtYzxpaN479112O12U7suQlUoxNbaOvb6G+gwDBSgKcWY9DReLy6O+fZ6jgqCYCAI3po6Xn5lI99Z+SMqPt5PIBA0+aamunj6qRWsWrksTmS7rrOroZG15y9SUe+jQ9chlncFa/h6KVQ6c6PJInxy6DOeX/0rtr2/m/b2jlibUor7Fs5m+vQJpmdaolE+qPexqcpLZSBAwkHtm9DroODCxUu89MsN7N//CZFItNOsFKVji8jJGRhz7TAM9jU182G9D184BPGaQMQSjl4IVUoxYXwxIwoLcKakJOhdce78F6z7XTnV1bWxKGmahqZ1vsYQ4XQgQEW9nyvBTpEmROGw2ShIdVPodpmabGVlZWUmy3XQNMXIkcOYMWMihYVDaG5po67OHzcbLlddYfiwIUyZXIrNZo5Dk66zy+/nQEMjevyXMsaTztLBOSzKzmJaejpZjqubRtKrvhsRoaWljb37DvLa+rc4cOAIYnnpxAkl7NvzTtx2eby9nVcvVXKuPWCyCzArI4NH8/MoSXXj6BqBa4m39IBSioyMdL6y+B6e/N7DDB8+xOrCiZNnOXHynMkWFeFyR5DKDnNmABjqcvFYfh6laakJRXIzQrtxuZzMnzeduXOnWpuIhKMcOvJfky1gGFSFwkQMkxkF3J+dxXC3C+0GBfVNCwXIzxtMSfEInM4UaxMXLlSa7iMiNEY7s4GVUk8a7utEspsbt/aApmmMLh5BcVEhzpSUq0cMBR0dYZOvLkLIiCJigHSWqHalGOXxMMjhuGE06atQgG88tIiKHX/kxZ/9kPHjRuN2uboEm8dYREA0FOC2KcZ50lk9opB1xUUMd7tNvonos1CA3Nwcnn9uFW+Xv8IjKx4kJ2dgwgOcpiDX6WR5bi5rCoezeGAmHkt9cD2STk+GYXDk0+OIYZCROYC7BueQkeGJE9TS0sabf9hCOBxhzQvPxOy+cITdDY1k2mzcmz2QVMucFKAlEqVRjxLQdVI0jaJrIp200FAozMMrnsPnayD3rhxGF49g0qQSpk+fQMHQfFNyj0QinD7zBeNKR8VsQcOgORily203pSBDhMpQiFNtAc4GAlQFgzRGIwx1u/hxYWHML2mhwWCIaTOXcfrsRQBsmkZe3mDunjWZpUsfYNHC2WRmDrA+dkMao1H+3dzCv/wNHG8P0Krr6IaOUlCans4bJaNjvknPURHBuKYMi+o6l6tq+Nv7u/jJT3/L7zduobbWb33sulSFQmyuqeUtbw3/aW6hORLGEAOlFAoVt9slLbST+AIS1XXOnL3Ia+vL2fDmZvz+JqtLHN5QmK21dez0+agLBjG681U3SsW9q1dCrQsnhlL4/E28vuEdtu/YSzBRZdRFq67zsb+BPT4/bdFogtKkk2sPhvRGqM1mY9KE0eTmDuoSbH6FiNDU3MqLv3iDquorprZuBDja2spuX1dFnwiBQS4nRZYyL+nF1E0g0MFHFf/k17/ZxLHPTsb+1nWjUKxe/SRla58lJcV8tq+LRCiv9rKz3hcXSRswxuPhqaFDGJ+WhrKMYNIR7SY11c03ly9h08aXWLJ4HnaH+SyEgq1bd9LWZinlRKgKBjna2hZ3HrIrjXtzsnm5uIiJHg+aUnHTrNdCuxlXOorvP/0IJcUjTJ2KCJWXvRz7/JTJPyJCdTBETShsWicKGJnq5on8/BvuUjctVCnFlEljmTd3WtzXI8JhS5nXYRhUhUIY1nACi7KzyLKOjIWbFgqQnZ1JQUF+5xnqWhR4vbUmU0SEFl2PS3AaUOR2k9LfZZ7b7YpbNAChUMR0bwhEjfho2jUNt83Wo5Ce2vtAvKgEo54w1SWiH4UmIpGgRLZ4ep1HrXy4fS9vv/uB6Q8JwFeXzOfZH3w7dt8UjVLhb+DTtlbTPLVrimfy8xnqNCd4K30WqusG4XA47reMw+HAcc1Klq7jiG7xU0phV6rHoe2z0P8XPX3Il4Y7Qm81d4beam4bof8Dm1qkaqi8WzAAAAAASUVORK5CYII=" alt="Fountain" style="height:52px;width:auto;margin-bottom:12px;">'
+        + '<div style="font-size:22px;font-weight:700;color:white;margin-bottom:4px;">Fountain Vitality</div>'
+        + '<div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:32px;">Med Math · Clinical Ops</div>'
+        + '<div id="auth-error" style="font-size:12px;color:#f87171;margin-bottom:10px;min-height:18px;"></div>'
+        + '<div style="display:flex;gap:8px;">'
+        + '<input id="auth-pw" type="password" placeholder="Password" style="padding:10px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:white;font-size:14px;width:200px;outline:none;" />'
+        + '<button id="auth-btn" style="padding:10px 20px;border-radius:8px;background:#00b4a2;border:none;color:white;font-size:14px;font-weight:600;cursor:pointer;">Enter</button>'
+        + '</div>';
+      document.body.appendChild(overlay);
+      function attempt(){
+        if(document.getElementById('auth-pw').value === pw){
+          localStorage.setItem(key,'1');
+          document.getElementById('auth-overlay').remove();
+          document.body.style.overflow='';
+        } else {
+          document.getElementById('auth-error').textContent='Incorrect password.';
+          document.getElementById('auth-pw').value='';
+          document.getElementById('auth-pw').focus();
+        }
+      }
+      document.getElementById('auth-btn').addEventListener('click', attempt);
+      document.getElementById('auth-pw').addEventListener('keydown', function(e){ if(e.key==='Enter') attempt(); });
+      document.getElementById('auth-pw').focus();
+    });
+  }
+})();
+</script>
 <style>
   :root {
     --teal: #00b4a2;
@@ -588,80 +625,4 @@
     </div>
     <div class="calc-grid">
       <div class="field"><label>Syringe Units Reported by Patient</label><input type="number" id="conv-units" placeholder="e.g. 45" oninput="calcConvert()"></div>
-      <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="conv-conc" value="200" oninput="calcConvert()"></div>
-    </div>
-    <div id="conv-results" style="display:none;">
-      <div class="result-grid">
-        <div class="result-item"><div class="ri-label">Volume (mL)</div><div class="ri-value" id="conv-ml">—</div></div>
-        <div class="result-item"><div class="ri-label">Actual Dose (mg)</div><div class="ri-value" id="conv-mg">—</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TRT CREAM -->
-<div class="section" id="section-trt-cream">
-  <div class="page-title">
-    <h2>TRT Cream</h2>
-    <p>Testosterone topical • controlled substance • same click math as HRT cream</p>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon">🧴</div>
-      <div><div class="card-title">Key Facts</div><div class="card-sub">Testosterone topical • male patients</div></div>
-    </div>
-    <div style="background:var(--gray-light);border-radius:9px;padding:14px;margin-bottom:12px;">
-      <table><tr><th>Reference</th><th>Value</th></tr><tr><td>1 click</td><td class="mono">0.25 mL</td></tr><tr><td>Typical starting dose</td><td class="mono">3–4 clicks (0.75–1 mL/day)</td></tr><tr><td>Maximum dose</td><td class="mono">8 clicks (2 mL/day)</td></tr><tr><td>Typical dispense volume</td><td class="mono">28 mL</td></tr><tr><td>Refill cadence</td><td class="mono">Every 28 days</td></tr></table>
-    </div>
-    <div class="warn"><span class="warn-icon">🚨</span><div>TRT cream is a <strong>controlled substance</strong>. Early refills require a valid clinical reason. Confirm dosing compliance before routing anywhere.</div></div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon">🧮</div>
-      <div><div class="card-title">TRT Cream Calculator</div><div class="card-sub">Days of supply and expected remaining volume</div></div>
-    </div>
-    <div class="calc-grid">
-      <div class="preset-row">
-        <span class="preset-tag">PRESET</span>
-        <label>Pharmacy</label>
-        <select onchange="applyTRTCreamPreset(this.value)">
-          <option value="">— Select to pre-fill volume —</option>
-          <option value="28">Empower · TRT Cream · 28 mL</option>
-          <option value="28">Belmar · TRT Cream · 28 mL</option>
-          <option value="28">TPH · TRT Cream · 28 mL</option>
-          <option value="28">Curexa · TRT Cream · 28 mL</option>
-        </select>
-      </div>
-      <div class="field"><label>Total Dispensed (mL)</label><input type="number" id="trtc-vol" value="28" oninput="calcTRTCream()"></div>
-      <div class="field"><label>Clicks Per Day</label><input type="number" id="trtc-clicks" placeholder="e.g. 4" oninput="calcTRTCream()"></div>
-      <div class="field"><label>Fill Date</label><input type="date" id="trtc-fill" oninput="calcTRTCream()"></div>
-      <div class="field"><label>Check Date (blank = today)</label><input type="date" id="trtc-check" oninput="calcTRTCream()"></div>
-    </div>
-    <div id="trtc-results" style="display:none;">
-      <div class="result-grid">
-        <div class="result-item"><div class="ri-label">Daily Usage</div><div class="ri-value" id="trtc-r-daily">—</div><div class="ri-sub">mL/day</div></div>
-        <div class="result-item"><div class="ri-label">Days of Supply</div><div class="ri-value" id="trtc-r-dos">—</div><div class="ri-sub">days</div></div>
-        <div class="result-item"><div class="ri-label">Days Elapsed</div><div class="ri-value" id="trtc-r-elapsed">—</div><div class="ri-sub">days</div></div>
-        <div class="result-item"><div class="ri-label">Expected Remaining</div><div class="ri-value" id="trtc-r-remain">—</div><div class="ri-sub">mL</div></div>
-      </div>
-      <div id="trtc-status"></div>
-      <button class="copy-btn" onclick="copyResult('trtc')">📋 Copy Results</button>
-    </div>
-  </div>
-</div>
-
-<!-- DOSE CHANGE -->
-<div class="section" id="section-dose-change">
-  <div class="page-title">
-    <h2>Dose Change Guide</h2>
-    <p>Any mid-cycle dose change requires a two-segment calculation</p>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon">🔄</div>
-      <div><div class="card-title">Dose Change — Recalculation Steps</div><div class="card-sub">Follow this process whenever the provider changes the dose between fills</div></div>
-    </div>
-    <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Note the dose change date</h3><p>Found in provider visit note or Akute chart note</p></div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Calculate usage at old dose</h3><p>Fill date → dose change date × old daily usage = mL used</p></div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Subtract from total dispensed</h3><p>Total dispensed − Segment 1 usage = remaining at change date</p></div></div>
-    <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Calculate remaining days at new dose</h3><p>Remaining ÷ new daily usage = days left after change</p></d
+      <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="conv-conc" value="200" oninput="calcConve
