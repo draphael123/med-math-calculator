@@ -6,10 +6,12 @@
 <title>Med Math — Fountain Vitality</title>
 <style>
   :root {
-    --teal: #0d9488;
-    --teal-light: #ccfbf1;
-    --teal-dark: #0f766e;
-    --teal-xdark: #134e4a;
+    --teal: #00b4a2;
+    --teal-light: #ccf3ef;
+    --teal-dark: #008f80;
+    --teal-xdark: #006b60;
+    --navy: #1a3848;
+    --navy-light: #234a5e;
     --amber: #f59e0b;
     --amber-light: #fef3c7;
     --red: #ef4444;
@@ -31,7 +33,7 @@
 
   /* Header */
   header {
-    background: var(--teal);
+    background: var(--navy);
     color: white;
     padding: 0 24px;
     height: 56px;
@@ -43,7 +45,9 @@
     z-index: 10;
   }
   .header-left { display: flex; align-items: center; gap: 12px; }
-  .header-icon { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .header-logo { height: 28px; width: auto; display: block; }
+  .header-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.2); margin: 0 4px; }
+  .header-tool-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); }
   .header-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
   .header-sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
   .header-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
@@ -72,9 +76,9 @@
     transition: all 0.12s; line-height: 1.3;
   }
   .sidebar-item:hover { background: var(--gray-light); color: var(--text); }
-  .sidebar-item.active { background: #f0fdf9; color: var(--teal); border-right-color: var(--teal); font-weight: 600; }
+  .sidebar-item.active { background: #e6f8f6; color: var(--teal-dark); border-right-color: var(--teal); font-weight: 600; }
   .sidebar-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: var(--gray-light); }
-  .sidebar-item.active .sidebar-icon { background: rgba(13,148,136,0.12); }
+  .sidebar-item.active .sidebar-icon { background: rgba(0,180,162,0.12); }
 
   /* Main */
   main { flex: 1; overflow-y: auto; padding: 24px; }
@@ -180,6 +184,17 @@
   .legend-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 12px; }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
+  /* Pharmacy preset */
+  .preset-row { grid-column: 1 / -1; background: #f0f9f8; border: 1.5px solid var(--teal-light); border-radius: 9px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+  .preset-row label { text-transform: none; font-size: 12px; font-weight: 700; color: var(--teal-dark); white-space: nowrap; }
+  .preset-row select { border-color: var(--teal-light); font-size: 13px; margin: 0; }
+  .preset-tag { font-size: 10px; background: var(--teal); color: white; border-radius: 4px; padding: 2px 6px; font-weight: 700; white-space: nowrap; }
+
+  /* Copy button */
+  .copy-btn { margin-top: 10px; background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; color: var(--gray); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.12s; }
+  .copy-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+  .copy-btn.copied { border-color: var(--green); color: #065f46; background: var(--green-light); }
+
   /* Mobile */
   @media (max-width: 700px) {
     body { overflow: auto; }
@@ -200,11 +215,21 @@
 
 <header>
   <div class="header-left">
-    <div class="header-icon">💊</div>
-    <div>
-      <div class="header-title">Med Math</div>
-      <div class="header-sub">Fountain Vitality — Clinical Ops</div>
-    </div>
+    <!-- Fountain Logo SVG -->
+    <svg class="header-logo" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Dark left plant -->
+      <path d="M10 32C10 25 6.5 19 6 13C5.5 7.5 8 5 10 7.5C10.5 11 10 21 10 32Z" fill="#FFFFFF" opacity="0.7"/>
+      <path d="M10 27C7.5 24 4.5 23.5 3 21.5C5 21.5 8 23 10 27Z" fill="#FFFFFF" opacity="0.7"/>
+      <path d="M10 20C8 17.5 5.5 17 4 15C6 15 9 16.5 10 20Z" fill="#FFFFFF" opacity="0.7"/>
+      <!-- Teal right plant -->
+      <path d="M15 32C15 24 19.5 17 21.5 11C23 6 20 3.5 17.5 5C16.5 9 15 19 15 32Z" fill="#00b4a2"/>
+      <path d="M15 25C17.5 22 22 21.5 24 19C21.5 19.5 17 21.5 15 25Z" fill="#00b4a2"/>
+      <path d="M15 18C17.5 15 22 14.5 24 12C21.5 12.5 17 14.5 15 18Z" fill="#00b4a2"/>
+      <!-- "Fountain" text -->
+      <text x="32" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="16" font-weight="700" fill="white" letter-spacing="-0.3">Fountain</text>
+    </svg>
+    <div class="header-divider"></div>
+    <div class="header-tool-label">Med Math · Clinical Ops</div>
   </div>
   <div class="header-badge">Internal Tool</div>
 </header>
@@ -438,6 +463,25 @@
     </div>
     <div class="sub-section active" id="hrt-standard">
       <div class="calc-grid">
+        <div class="preset-row">
+          <span class="preset-tag">PRESET</span>
+          <label>Pharmacy</label>
+          <select onchange="applyHRTPreset(this.value)">
+            <option value="">— Select to pre-fill volume —</option>
+            <optgroup label="Empower">
+              <option value="69">Empower · Phase 1 / 1.5 · 69 mL (2 dispensers)</option>
+              <option value="22.5">Empower · Phase 2 · 22.5 mL (combo dispenser)</option>
+            </optgroup>
+            <optgroup label="Belmar">
+              <option value="69">Belmar · Phase 1 / 1.5 · 69 mL</option>
+              <option value="22.5">Belmar · Phase 2 · 22.5 mL</option>
+            </optgroup>
+            <optgroup label="Curexa">
+              <option value="69">Curexa · Phase 1 / 1.5 · 69 mL</option>
+              <option value="22.5">Curexa · Phase 2 · 22.5 mL</option>
+            </optgroup>
+          </select>
+        </div>
         <div class="field"><label>Total Dispensed Volume (mL)</label><input type="number" id="hrt-vol" placeholder="e.g. 69" oninput="calcHRT()"></div>
         <div class="field"><label>Clicks Per Day</label><input type="number" id="hrt-clicks" placeholder="e.g. 2" oninput="calcHRT()"></div>
         <div class="field"><label>Fill Date</label><input type="date" id="hrt-fill" oninput="calcHRT()"></div>
@@ -451,6 +495,7 @@
           <div class="result-item"><div class="ri-label">Expected Remaining</div><div class="ri-value" id="hrt-r-remain">—</div><div class="ri-sub">mL</div></div>
         </div>
         <div id="hrt-std-status"></div>
+        <button class="copy-btn" onclick="copyResult('hrt-std')">📋 Copy Results</button>
       </div>
     </div>
     <div class="sub-section" id="hrt-dosechange">
@@ -508,6 +553,26 @@
       <div><div class="card-title">TRT Injection Calculator</div><div class="card-sub">Converts mg dose → mL → syringe units → days of supply</div></div>
     </div>
     <div class="calc-grid">
+      <div class="preset-row">
+        <span class="preset-tag">PRESET</span>
+        <label>Pharmacy</label>
+        <select onchange="applyTRTPreset(this.value)">
+          <option value="">— Select to pre-fill concentration + vial —</option>
+          <optgroup label="Empower">
+            <option value="200|10">Empower · Testosterone Cypionate · 200 mg/mL · 10 mL vial</option>
+            <option value="100|10">Empower · Testosterone Cypionate · 100 mg/mL · 10 mL vial</option>
+          </optgroup>
+          <optgroup label="Belmar">
+            <option value="200|10">Belmar · Testosterone Cypionate · 200 mg/mL · 10 mL vial</option>
+          </optgroup>
+          <optgroup label="TPH">
+            <option value="200|10">TPH · Testosterone Cypionate · 200 mg/mL · 10 mL vial</option>
+          </optgroup>
+          <optgroup label="Curexa">
+            <option value="200|10">Curexa · Testosterone Cypionate · 200 mg/mL · 10 mL vial</option>
+          </optgroup>
+        </select>
+      </div>
       <div class="field"><label>Prescribed Dose (mg per injection)</label><input type="number" id="trt-mg" placeholder="e.g. 60" oninput="calcTRT()"></div>
       <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="trt-conc" value="200" oninput="calcTRT()"></div>
       <div class="field"><label>Injections Per Week</label><select id="trt-freq" onchange="calcTRT()"><option value="2">biw — 2x/week</option><option value="1">qw — 1x/week</option><option value="3">3x/week</option></select></div>
@@ -523,6 +588,7 @@
         <div class="result-item"><div class="ri-label">Days of Supply</div><div class="ri-value" id="trt-r-dos">—</div><div class="ri-sub">days</div></div>
       </div>
       <div id="trt-runout" style="margin-top:10px;"></div>
+      <button class="copy-btn" onclick="copyResult('trt')">📋 Copy Results</button>
     </div>
   </div>
   <div class="card">
@@ -565,6 +631,17 @@
       <div><div class="card-title">TRT Cream Calculator</div><div class="card-sub">Days of supply and expected remaining volume</div></div>
     </div>
     <div class="calc-grid">
+      <div class="preset-row">
+        <span class="preset-tag">PRESET</span>
+        <label>Pharmacy</label>
+        <select onchange="applyTRTCreamPreset(this.value)">
+          <option value="">— Select to pre-fill volume —</option>
+          <option value="28">Empower · TRT Cream · 28 mL</option>
+          <option value="28">Belmar · TRT Cream · 28 mL</option>
+          <option value="28">TPH · TRT Cream · 28 mL</option>
+          <option value="28">Curexa · TRT Cream · 28 mL</option>
+        </select>
+      </div>
       <div class="field"><label>Total Dispensed (mL)</label><input type="number" id="trtc-vol" value="28" oninput="calcTRTCream()"></div>
       <div class="field"><label>Clicks Per Day</label><input type="number" id="trtc-clicks" placeholder="e.g. 4" oninput="calcTRTCream()"></div>
       <div class="field"><label>Fill Date</label><input type="date" id="trtc-fill" oninput="calcTRTCream()"></div>
@@ -578,6 +655,7 @@
         <div class="result-item"><div class="ri-label">Expected Remaining</div><div class="ri-value" id="trtc-r-remain">—</div><div class="ri-sub">mL</div></div>
       </div>
       <div id="trtc-status"></div>
+      <button class="copy-btn" onclick="copyResult('trtc')">📋 Copy Results</button>
     </div>
   </div>
 </div>
@@ -871,6 +949,56 @@ function calcTRTCream() {
     document.getElementById('trtc-r-remain').textContent  = '—';
   }
   statusBox('trtc-status', msg);
+}
+
+// ── Pharmacy Presets ──────────────────────────────────────────
+function applyHRTPreset(val) {
+  if (!val) return;
+  document.getElementById('hrt-vol').value = val;
+  calcHRT();
+}
+
+function applyTRTPreset(val) {
+  if (!val) return;
+  const [conc, vial] = val.split('|');
+  document.getElementById('trt-conc').value = conc;
+  document.getElementById('trt-vial').value = vial;
+  calcTRT();
+}
+
+function applyTRTCreamPreset(val) {
+  if (!val) return;
+  document.getElementById('trtc-vol').value = val;
+  calcTRTCream();
+}
+
+// ── Copy Results ──────────────────────────────────────────────
+function copyResult(prefix) {
+  let lines = [`Fountain Vitality — Med Math Calculation`, `Date: ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`, ''];
+  const labelMap = {
+    'hrt-std': ['hrt-r-daily','hrt-r-dos','hrt-r-elapsed','hrt-r-remain'],
+    'trt':     ['trt-r-ml','trt-r-units','trt-r-weekly','trt-r-dos'],
+    'trtc':    ['trtc-r-daily','trtc-r-dos','trtc-r-elapsed','trtc-r-remain']
+  };
+  const titleMap = { 'hrt-std':'HRT Cream', 'trt':'TRT Injection', 'trtc':'TRT Cream' };
+  lines.push(`Calculator: ${titleMap[prefix]}`);
+  (labelMap[prefix] || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      const label = el.previousElementSibling?.textContent || id;
+      lines.push(`  ${label}: ${el.textContent}`);
+    }
+  });
+  // Grab status text
+  const statusEl = document.getElementById(prefix === 'hrt-std' ? 'hrt-std-status' : prefix === 'trt' ? 'trt-runout' : 'trtc-status');
+  if (statusEl?.textContent?.trim()) lines.push(`\nStatus: ${statusEl.textContent.trim()}`);
+
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = event.currentTarget;
+    btn.classList.add('copied');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 Copy Results'; }, 2000);
+  });
 }
 
 function statusBox(id, msg) {
