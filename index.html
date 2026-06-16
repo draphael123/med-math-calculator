@@ -625,4 +625,414 @@
     </div>
     <div class="calc-grid">
       <div class="field"><label>Syringe Units Reported by Patient</label><input type="number" id="conv-units" placeholder="e.g. 45" oninput="calcConvert()"></div>
-      <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="conv-conc" value="200" oninput="calcConve
+      <div class="field"><label>Syringe Units Reported by Patient</label><input type="number" id="conv-units" placeholder="e.g. 45" oninput="calcConvert()"></div>
+      <div class="field"><label>Concentration (mg/mL)</label><input type="number" id="conv-conc" value="200" oninput="calcConvert()"></div>
+    </div>
+    <div id="conv-results" style="display:none;">
+      <div class="result-grid">
+        <div class="result-item"><div class="ri-label">Volume (mL)</div><div class="ri-value" id="conv-ml">—</div></div>
+        <div class="result-item"><div class="ri-label">Actual Dose (mg)</div><div class="ri-value" id="conv-mg">—</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRT CREAM -->
+<div class="section" id="section-trt-cream">
+  <div class="page-title">
+    <h2>TRT Cream</h2>
+    <p>Testosterone topical • controlled substance • same click math as HRT cream</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🧴</div>
+      <div><div class="card-title">Key Facts</div><div class="card-sub">Testosterone topical • male patients</div></div>
+    </div>
+    <div style="background:var(--gray-light);border-radius:9px;padding:14px;margin-bottom:12px;">
+      <table><tr><th>Reference</th><th>Value</th></tr><tr><td>1 click</td><td class="mono">0.25 mL</td></tr><tr><td>Typical starting dose</td><td class="mono">3–4 clicks (0.75–1 mL/day)</td></tr><tr><td>Maximum dose</td><td class="mono">8 clicks (2 mL/day)</td></tr><tr><td>Typical dispense volume</td><td class="mono">28 mL</td></tr><tr><td>Refill cadence</td><td class="mono">Every 28 days</td></tr></table>
+    </div>
+    <div class="warn"><span class="warn-icon">🚨</span><div>TRT cream is a <strong>controlled substance</strong>. Early refills require a valid clinical reason. Confirm dosing compliance before routing anywhere.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🧮</div>
+      <div><div class="card-title">TRT Cream Calculator</div><div class="card-sub">Days of supply and expected remaining volume</div></div>
+    </div>
+    <div class="calc-grid">
+      <div class="preset-row">
+        <span class="preset-tag">PRESET</span>
+        <label>Pharmacy</label>
+        <select onchange="applyTRTCreamPreset(this.value)">
+          <option value="">— Select to pre-fill volume —</option>
+          <option value="28">Empower · TRT Cream · 28 mL</option>
+          <option value="28">Belmar · TRT Cream · 28 mL</option>
+          <option value="28">TPH · TRT Cream · 28 mL</option>
+          <option value="28">Curexa · TRT Cream · 28 mL</option>
+        </select>
+      </div>
+      <div class="field"><label>Total Dispensed (mL)</label><input type="number" id="trtc-vol" value="28" oninput="calcTRTCream()"></div>
+      <div class="field"><label>Clicks Per Day</label><input type="number" id="trtc-clicks" placeholder="e.g. 4" oninput="calcTRTCream()"></div>
+      <div class="field"><label>Fill Date</label><input type="date" id="trtc-fill" oninput="calcTRTCream()"></div>
+      <div class="field"><label>Check Date (blank = today)</label><input type="date" id="trtc-check" oninput="calcTRTCream()"></div>
+    </div>
+    <div id="trtc-results" style="display:none;">
+      <div class="result-grid">
+        <div class="result-item"><div class="ri-label">Daily Usage</div><div class="ri-value" id="trtc-r-daily">—</div><div class="ri-sub">mL/day</div></div>
+        <div class="result-item"><div class="ri-label">Days of Supply</div><div class="ri-value" id="trtc-r-dos">—</div><div class="ri-sub">days</div></div>
+        <div class="result-item"><div class="ri-label">Days Elapsed</div><div class="ri-value" id="trtc-r-elapsed">—</div><div class="ri-sub">days</div></div>
+        <div class="result-item"><div class="ri-label">Expected Remaining</div><div class="ri-value" id="trtc-r-remain">—</div><div class="ri-sub">mL</div></div>
+      </div>
+      <div id="trtc-status"></div>
+      <button class="copy-btn" onclick="copyResult('trtc')">📋 Copy Results</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOSE CHANGE -->
+<div class="section" id="section-dose-change">
+  <div class="page-title">
+    <h2>Dose Change Guide</h2>
+    <p>Any mid-cycle dose change requires a two-segment calculation</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🔄</div>
+      <div><div class="card-title">Dose Change — Recalculation Steps</div><div class="card-sub">Follow this process whenever the provider changes the dose between fills</div></div>
+    </div>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Note the dose change date</h3><p>Found in provider visit note or Akute chart note</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Calculate usage at old dose</h3><p>Fill date → dose change date × old daily usage = mL used</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Subtract from total dispensed</h3><p>Total dispensed − Segment 1 usage = remaining at change date</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Calculate remaining days at new dose</h3><p>Remaining ÷ new daily usage = days left after change</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><h3>Find new run-out date</h3><p>Dose change date + days remaining = new estimated run-out date</p></div></div>
+    <div style="font-size:12px;color:var(--teal-dark);background:var(--teal-light);border-radius:8px;padding:10px;margin-top:4px;">
+      💡 Use <strong>HRT Cream → Mid-Cycle Dose Change tab</strong> for the automated version of steps 2–5.
+    </div>
+    <hr class="divider">
+    <table>
+      <tr><th>Situation</th><th>Action</th></tr>
+      <tr><td><strong>Provider increases dose</strong></td><td>Recalculate immediately. Supply runs out sooner. Flag R&amp;C with new estimated run-out date.</td></tr>
+      <tr><td><strong>Provider decreases dose</strong></td><td>Recalculate. Patient may have more supply than expected. Educate on BUD.</td></tr>
+      <tr><td><strong>Patient self-adjusts dose</strong></td><td>Document in Akute. Notify provider. Calculate at <em>both</em> prescribed and self-reported dose.</td></tr>
+      <tr><td><strong>Patient misses doses</strong></td><td>More supply than expected — educate on compliance.</td></tr>
+      <tr><td><strong>Patient switches form</strong></td><td>New calculation from switch date. Old supply math no longer applies.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- EARLY REFILL -->
+<div class="section" id="section-early-refill">
+  <div class="page-title">
+    <h2>Early Refill</h2>
+    <p>Use every time a patient reports running low before expected refill date</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">⚠️</div>
+      <div><div class="card-title">Early Refill Decision Framework</div><div class="card-sub">Six-step checklist before routing anything</div></div>
+    </div>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Verify fill date and dispense amount</h3><p>Akute → Medications tab. Note fill date, total volume/count, and prescribed dose.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Do the math</h3><p>Calculate expected days of supply → days elapsed → how much should remain. Use the appropriate calculator in the sidebar.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Request photos or count</h3><p>Ask for dispenser photo or remaining tablet count. Compare to your calculation.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Check for dose changes</h3><p>Any dose increases since fill date? Recalculate with segments.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><h3>Check for compliance issues</h3><p>Using more than prescribed? Self-adjusting? Document and notify provider.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><h3>Determine next step</h3><p>See outcomes below.</p></div></div>
+    <hr class="divider">
+    <table>
+      <tr><th>Outcome</th><th>Action</th></tr>
+      <tr><td><span class="tag tag-green">Math checks out</span> — Patient genuinely running low</td><td>Route to R&amp;C with calculation documented. <strong>Always show your work.</strong></td></tr>
+      <tr><td><span class="tag tag-amber">Math does not check out</span></td><td>Educate on correct dosing <em>before</em> routing anywhere.</td></tr>
+      <tr><td><span class="tag tag-red">TRT Injection running out early</span> — no refills remain</td><td>Requires video visit. Cannot issue early refill without provider review.</td></tr>
+    </table>
+    <div class="warn" style="margin-top:12px;"><span class="warn-icon">📝</span><div>When routing to R&amp;C for an early refill, <strong>always include your calculation in the ticket</strong> — show your work.</div></div>
+  </div>
+</div>
+
+<!-- CHEAT SHEETS -->
+<div class="section" id="section-cheatsheet">
+  <div class="page-title">
+    <h2>Cheat Sheets</h2>
+    <p>Quick-reference tables for common doses, conversions, and formulas</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">💉</div>
+      <div><div class="card-title">Testosterone Cypionate (200 mg/mL)</div><div class="card-sub">Quick dose → mL → syringe units conversion</div></div>
+    </div>
+    <table><tr><th>Dose (mg)</th><th>Volume (mL)</th><th>Syringe Units</th></tr><tr><td>40 mg</td><td class="mono">0.20 mL</td><td class="mono">20 units</td></tr><tr><td>50 mg</td><td class="mono">0.25 mL</td><td class="mono">25 units</td></tr><tr><td>60 mg</td><td class="mono">0.30 mL</td><td class="mono">30 units</td></tr><tr><td>70 mg</td><td class="mono">0.35 mL</td><td class="mono">35 units</td></tr><tr><td>80 mg</td><td class="mono">0.40 mL</td><td class="mono">40 units</td></tr><tr><td>90 mg</td><td class="mono">0.45 mL</td><td class="mono">45 units</td></tr><tr><td>100 mg</td><td class="mono">0.50 mL</td><td class="mono">50 units</td></tr></table>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🧴</div>
+      <div><div class="card-title">HRT/TRT Cream Click-to-mL Conversion</div></div>
+    </div>
+    <table><tr><th>Clicks</th><th>mL</th><th>Common Usage</th></tr><tr><td>1</td><td class="mono">0.25 mL</td><td>Low dose / starting dose HRT</td></tr><tr><td>2</td><td class="mono">0.50 mL</td><td>Typical HRT maintenance</td></tr><tr><td>3</td><td class="mono">0.75 mL</td><td>TRT cream starting dose</td></tr><tr><td>4</td><td class="mono">1.00 mL</td><td>TRT cream standard / HRT high dose</td></tr><tr><td>6</td><td class="mono">1.50 mL</td><td>TRT cream higher dose</td></tr><tr><td>8</td><td class="mono">2.00 mL</td><td>TRT cream maximum dose</td></tr></table>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">📐</div>
+      <div><div class="card-title">Formula Summary</div></div>
+    </div>
+    <table><tr><th>Formula</th><th>Calculation</th></tr><tr><td>Days of supply (cream)</td><td class="mono">Total volume ÷ daily usage</td></tr><tr><td>Expected remaining (cream)</td><td class="mono">Days of supply − days elapsed</td></tr><tr><td>mL per injection (TRT)</td><td class="mono">Dose (mg) ÷ concentration (mg/mL)</td></tr><tr><td>Syringe units from mL</td><td class="mono">mL × 100</td></tr><tr><td>mg from syringe units</td><td class="mono">Units ÷ 100 × concentration (mg/mL)</td></tr><tr><td>Days of supply (injection)</td><td class="mono">(Total mL ÷ weekly mL) × 7</td></tr><tr><td>Daily usage from clicks</td><td class="mono">Clicks × 0.25 mL</td></tr></table>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">📦</div>
+      <div><div class="card-title">Common Dispense Volumes</div></div>
+    </div>
+    <table><tr><th>Medication</th><th>Volume / Qty</th><th>Notes</th></tr><tr><td>Phase 1/1.5 HRT Cream</td><td class="mono">69 mL total</td><td>Two dispensers (34.5 mL each)</td></tr><tr><td>Phase 2 HRT Cream (combo)</td><td class="mono">22.5 mL</td><td>Single dispenser</td></tr><tr><td>TRT Cream</td><td class="mono">28 mL</td><td>Refills every 28 days</td></tr><tr><td>TRT Injection (Tcyp)</td><td class="mono">10 mL vial</td><td>200 mg/mL = 2,000 mg total</td></tr></table>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">💡</div>
+      <div><div class="card-title">Tips &amp; Common Pitfalls</div></div>
+    </div>
+    <ul class="tips">
+      <li>Phase 1 patients receive 2 dispensers — always confirm before concluding they are out early</li>
+      <li>Check Akute Medications tab → "More Info" for days supply — not the IC sidebar (which can lag)</li>
+      <li>Use fill date from Akute or shipment tracking link in the IC right-hand sidebar</li>
+      <li>Dose prescribed is in mg for TRT injections — patients often report in syringe units; always convert</li>
+      <li>When routing to R&amp;C, document your full calculation in the ticket</li>
+      <li>Self-adjusting testosterone dose: document and notify provider immediately</li>
+      <li>TRT injection early refill with no refills remaining → requires video visit, no exceptions</li>
+      <li>Dose change mid-cycle = two-segment calculation, not a simple average</li>
+    </ul>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function today() { return new Date().toISOString().split('T')[0]; }
+function dateDiff(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+function addDays(dateStr, days) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + Math.round(days));
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+function fmt(n, dec=1) { return isNaN(n) ? '—' : (+n).toFixed(dec); }
+function fmtInt(n) { return isNaN(n) ? '—' : Math.round(n).toString(); }
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showSectionByName(id) {
+  const btn = document.querySelector('.sidebar-item[onclick="showSection(\'' + id + '\', this)"]');
+  if (btn) showSection(id, btn);
+}
+
+function showSub(prefix, id, btn) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+  card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(prefix + '-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function calcOverview() {
+  const total = parseFloat(document.getElementById('ov-total').value);
+  const daily = parseFloat(document.getElementById('ov-daily').value);
+  const fill  = document.getElementById('ov-filldate').value;
+  const check = document.getElementById('ov-checkdate').value || today();
+  if (isNaN(total) || isNaN(daily) || daily <= 0) { document.getElementById('ov-results').style.display='none'; return; }
+  const dos = total / daily;
+  document.getElementById('ov-results').style.display = 'grid';
+  document.getElementById('ov-r1').textContent = fmt(dos,1);
+  if (fill) {
+    const elapsed = dateDiff(fill, check);
+    const remain  = dos - elapsed;
+    document.getElementById('ov-r2').textContent = fmtInt(elapsed);
+    document.getElementById('ov-r3').textContent = fmt(Math.max(0, remain * daily),1) + ' mL / ' + fmtInt(Math.max(0,remain)) + 'd';
+    document.getElementById('ov-r4').textContent = addDays(fill, dos);
+    document.getElementById('ov-r4sub').textContent = remain >= 0 ? fmtInt(remain) + ' days left' : 'RAN OUT ~' + fmtInt(-remain) + ' days ago';
+  } else {
+    ['ov-r2','ov-r3','ov-r4'].forEach(id => document.getElementById(id).textContent = '—');
+    document.getElementById('ov-r4sub').textContent = '';
+  }
+  statusBox('ov-status', '');
+}
+
+function calcHRT() {
+  const vol    = parseFloat(document.getElementById('hrt-vol').value);
+  const clicks = parseFloat(document.getElementById('hrt-clicks').value);
+  const fill   = document.getElementById('hrt-fill').value;
+  const check  = document.getElementById('hrt-check').value || today();
+  if (isNaN(vol) || isNaN(clicks) || clicks <= 0) { document.getElementById('hrt-std-results').style.display='none'; return; }
+  const daily = clicks * 0.25;
+  const dos   = vol / daily;
+  document.getElementById('hrt-std-results').style.display='block';
+  document.getElementById('hrt-r-daily').textContent = fmt(daily,2);
+  document.getElementById('hrt-r-dos').textContent   = fmt(dos,1);
+  let msg = '';
+  if (fill) {
+    const elapsed = dateDiff(fill, check);
+    const remain  = dos - elapsed;
+    const remVol  = remain * daily;
+    document.getElementById('hrt-r-elapsed').textContent = fmtInt(elapsed);
+    document.getElementById('hrt-r-remain').textContent  = fmt(Math.max(0,remVol),1);
+    if (remain < 0) msg = 'alert|Patient should have run out approximately ' + fmtInt(-remain) + ' days ago. Timing consistent with complaint.';
+    else if (remain < 7) msg = 'warn|Only ~' + fmtInt(remain) + ' days left (~' + fmt(remVol,1) + ' mL). Getting low — consider routing to R&C.';
+    else msg = 'good|Patient should have ~' + fmt(remVol,1) + ' mL (~' + fmtInt(remain) + ' days) remaining. Early refill claim needs further review.';
+  } else {
+    document.getElementById('hrt-r-elapsed').textContent = '—';
+    document.getElementById('hrt-r-remain').textContent  = '—';
+  }
+  statusBox('hrt-std-status', msg);
+}
+
+function calcHRTDose() {
+  const vol      = parseFloat(document.getElementById('hrt-dc-vol').value);
+  const fill     = document.getElementById('hrt-dc-fill').value;
+  const c1       = parseFloat(document.getElementById('hrt-dc-c1').value);
+  const changedt = document.getElementById('hrt-dc-changedate').value;
+  const c2       = parseFloat(document.getElementById('hrt-dc-c2').value);
+  const check    = document.getElementById('hrt-dc-check').value || today();
+  if (isNaN(vol) || isNaN(c1) || isNaN(c2) || !fill || !changedt) { document.getElementById('hrt-dc-results').style.display='none'; return; }
+  const d1 = c1 * 0.25, d2 = c2 * 0.25;
+  const seg1Days = dateDiff(fill, changedt);
+  const usedSeg1 = seg1Days * d1;
+  const remainAtChange = vol - usedSeg1;
+  const seg2Days = dateDiff(changedt, check);
+  const usedSeg2 = seg2Days * d2;
+  const currentRemain = remainAtChange - usedSeg2;
+  document.getElementById('hrt-dc-results').style.display = 'block';
+  document.getElementById('hrt-dc-r1').textContent = fmt(usedSeg1,1);
+  document.getElementById('hrt-dc-r2').textContent = fmt(Math.max(0,remainAtChange),1);
+  document.getElementById('hrt-dc-r3').textContent = fmt(usedSeg2,1);
+  document.getElementById('hrt-dc-r4').textContent = fmt(Math.max(0,currentRemain),1);
+  let msg = '';
+  if (remainAtChange < 0) msg = 'alert|Patient would have run out before the dose change date. Check dispense volume or fill date.';
+  else if (currentRemain < 0) msg = 'alert|Patient would have run out approximately ' + fmtInt(-currentRemain / d2) + ' days ago at the new dose. Consistent with early refill complaint.';
+  else if (currentRemain < 3) msg = 'warn|Patient is very low (~' + fmt(currentRemain,1) + ' mL). Route to R&C with this calculation.';
+  else msg = 'good|Patient should have ~' + fmt(currentRemain,1) + ' mL remaining. Document both segments in ticket.';
+  statusBox('hrt-dc-status', msg);
+}
+
+function calcTRT() {
+  const mg     = parseFloat(document.getElementById('trt-mg').value);
+  const conc   = parseFloat(document.getElementById('trt-conc').value);
+  const freq   = parseInt(document.getElementById('trt-freq').value);
+  const vial   = parseFloat(document.getElementById('trt-vial').value);
+  const nvials = parseFloat(document.getElementById('trt-nvials').value);
+  const fill   = document.getElementById('trt-fill').value;
+  if (isNaN(mg) || isNaN(conc) || conc <= 0) { document.getElementById('trt-results').style.display='none'; return; }
+  const mlPerInj = mg / conc;
+  const units    = mlPerInj * 100;
+  const weeklyMl = mlPerInj * freq;
+  const totalMl  = vial * nvials;
+  const dos      = (totalMl / weeklyMl) * 7;
+  document.getElementById('trt-results').style.display='block';
+  document.getElementById('trt-r-ml').textContent     = fmt(mlPerInj,2);
+  document.getElementById('trt-r-units').textContent  = fmtInt(units);
+  document.getElementById('trt-r-weekly').textContent = fmt(weeklyMl,2);
+  document.getElementById('trt-r-dos').textContent    = fmtInt(dos);
+  let msg = '';
+  if (fill) {
+    const elapsed = dateDiff(fill, today());
+    const remain  = dos - elapsed;
+    if (remain < 0) msg = 'alert|Patient should have run out ~' + fmtInt(-remain) + ' days ago. Review for early refill.';
+    else msg = 'good|~' + fmtInt(remain) + ' days remaining. Est. run-out: ' + addDays(fill, dos) + '.';
+  }
+  statusBox('trt-runout', msg);
+}
+
+function calcConvert() {
+  const units = parseFloat(document.getElementById('conv-units').value);
+  const conc  = parseFloat(document.getElementById('conv-conc').value);
+  if (isNaN(units) || isNaN(conc)) { document.getElementById('conv-results').style.display='none'; return; }
+  const ml = units / 100;
+  const mg = ml * conc;
+  document.getElementById('conv-results').style.display='block';
+  document.getElementById('conv-ml').textContent = fmt(ml,2) + ' mL';
+  document.getElementById('conv-mg').textContent = fmt(mg,0) + ' mg';
+}
+
+function calcTRTCream() {
+  const vol    = parseFloat(document.getElementById('trtc-vol').value);
+  const clicks = parseFloat(document.getElementById('trtc-clicks').value);
+  const fill   = document.getElementById('trtc-fill').value;
+  const check  = document.getElementById('trtc-check').value || today();
+  if (isNaN(vol) || isNaN(clicks) || clicks <= 0) { document.getElementById('trtc-results').style.display='none'; return; }
+  const daily = clicks * 0.25;
+  const dos   = vol / daily;
+  document.getElementById('trtc-results').style.display='block';
+  document.getElementById('trtc-r-daily').textContent = fmt(daily,2);
+  document.getElementById('trtc-r-dos').textContent   = fmt(dos,1);
+  let msg = '';
+  if (fill) {
+    const elapsed = dateDiff(fill, check);
+    const remain  = dos - elapsed;
+    const remVol  = remain * daily;
+    document.getElementById('trtc-r-elapsed').textContent = fmtInt(elapsed);
+    document.getElementById('trtc-r-remain').textContent  = fmt(Math.max(0,remVol),1);
+    if (remain < 0) msg = 'alert|Patient should have run out ~' + fmtInt(-remain) + ' days ago. TRT cream is controlled — requires valid clinical reason for early refill.';
+    else if (remain < 3) msg = 'warn|Very low supply (~' + fmt(remVol,1) + ' mL). Route to R&C with calculation.';
+    else msg = 'good|~' + fmt(remVol,1) + ' mL (~' + fmtInt(remain) + ' days) remaining.';
+  } else {
+    document.getElementById('trtc-r-elapsed').textContent = '—';
+    document.getElementById('trtc-r-remain').textContent  = '—';
+  }
+  statusBox('trtc-status', msg);
+}
+
+function applyHRTPreset(val) {
+  if (!val) return;
+  document.getElementById('hrt-vol').value = val;
+  calcHRT();
+}
+
+function applyTRTPreset(val) {
+  if (!val) return;
+  const [conc, vial] = val.split('|');
+  document.getElementById('trt-conc').value = conc;
+  document.getElementById('trt-vial').value = vial;
+  calcTRT();
+}
+
+function applyTRTCreamPreset(val) {
+  if (!val) return;
+  document.getElementById('trtc-vol').value = val;
+  calcTRTCream();
+}
+
+function copyResult(prefix) {
+  let lines = ['Fountain Vitality — Med Math Calculation', 'Date: ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), ''];
+  const labelMap = {
+    'hrt-std': ['hrt-r-daily','hrt-r-dos','hrt-r-elapsed','hrt-r-remain'],
+    'trt':     ['trt-r-ml','trt-r-units','trt-r-weekly','trt-r-dos'],
+    'trtc':    ['trtc-r-daily','trtc-r-dos','trtc-r-elapsed','trtc-r-remain']
+  };
+  const titleMap = { 'hrt-std':'HRT Cream', 'trt':'TRT Injection', 'trtc':'TRT Cream' };
+  lines.push('Calculator: ' + titleMap[prefix]);
+  (labelMap[prefix] || []).forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      const label = el.previousElementSibling ? el.previousElementSibling.textContent : id;
+      lines.push('  ' + label + ': ' + el.textContent);
+    }
+  });
+  const statusEl = document.getElementById(prefix === 'hrt-std' ? 'hrt-std-status' : prefix === 'trt' ? 'trt-runout' : 'trtc-status');
+  if (statusEl && statusEl.textContent && statusEl.textContent.trim()) lines.push('\nStatus: ' + statusEl.textContent.trim());
+  navigator.clipboard.writeText(lines.join('\n')).then(function() {
+    const btn = event.currentTarget;
+    btn.classList.add('copied');
+    btn.textContent = '✅ Copied!';
+    setTimeout(function() { btn.classList.remove('copied'); btn.innerHTML = '📋 Copy Results'; }, 2000);
+  });
+}
+
+function statusBox(id, msg) {
+  const el = document.getElementById(id);
+  if (!msg) { el.innerHTML = ''; return; }
+  const parts = msg.split('|');
+  const type = parts[0], text = parts[1];
+  const icons = {alert:'🚨', warn:'⚠️', good:'✅'};
+  el.innerHTML = '<div class="' + type + '" style="margin-top:10px;"><span style="font-size:16px;flex-shrink:0;">' + icons[type] + '</span><div>' + text + '</div></div>';
+}
+</script>
+</body>
+</html>
